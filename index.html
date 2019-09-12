@@ -1,11 +1,102 @@
+
 <!DOCTYPE html>
+
+
 <html>
+
 <head>
-  <meta charset="UTF-8">
-  <title>Página de prueba<title>
+  <title>IFT3150 - Abdel Ghani Labassi </title>
 </head>
 <body>
-  <h1>Hola amiguitos!</h1>
-  <footer>gpuma 2017</footer>
+  
+
+  <h1>IFT3150 - Projet d'informatique</h1>
+  <h2> Détection de dépression et de suicide sur Twitter </h2>
+  <h2>Par Abdel Ghani Labassi </h2>
+  <h2>Supervisé par <a href="http://rali.iro.umontreal.ca/nie/jian-yun-nie/"> Prof. Jian-Yun Nie </a></h2>
+  <ul>
+    <li><a href="#Enonce">Énoncé du projet</a></li>
+    <li><a href="#Description">Description détaillée</a></li>
+    <li><a href="#Plan">Plan de développement</a></li>
+    <li><a href="#Rapports">Rapports d'avancement</a></li>
+	<li><a href="#RapportFinal"> Résumé du rapport final</a></li>
+  </ul>
+
+
+  <div id="Enonce">
+      <h2>Énoncé du projet</h2>
+	  <p> 
+	  	La dépression et le suicide sont devenus des problèmes de plus en plus préoccupants dans notre société. Une détection à temps de ces problèmes peut aider à sauver des vies. Le travail de ce projet consiste à explorer la possibilité de détecter des signaux de dépression et de suicide sur les réseaux sociaux où beaucoup d'internautes échangent des informations et leurs pensées. Des personnes ayants la dépression ou des idées suicidaires peuvent les exprimer sur les réseaux sociaux. Notre travail est une étude de faisabilité dans l'automatisation de cette détection. Le projet est subventionnée par L'Agence de la santé publique du Canada via une subvention à l'entreprise Sightline avec qui des chercheurs de McGill et de l'UdeM collaborent.
+	  </p> 
+
+	<p> 
+  		La tâche de détection peut être vue comme une tâche de classification: est-ce qu'un post sur Twitter (un tweet) montre des signaux de dépression ou de suicide? Pour cela, nous allons explorer différents types d'informations: les mots dans le post, le sentiment que ces mots expriment, les caractéristiques de l'utilisateur (e.g. fréquence d'utilisation de Twitter), le cercle d'amis sur Twitter, etc. Ces informations seront extraites à partir des données de Twitter en utilisant l'extraction de l'information et des outils de traitement de langue naturelle. Parmi les techniques de classification envisagées, nous allons tester des techniques de classification classiques comme Naive Bayes, l'arbre de décision, mais aussi les techniques d'apprentissage profond (e.g. représenter des mots par des embeddings). Ces techniques, supervisés, devront être investigués seulement l'annotation des données complétés par des chercheurs de McGill. En attente de cela, je vais explorer les techniques non-supervisées pour mieux comprendre la structure du jeu de données receuilli.
+    </p>
+  </div>
+
+
+  <div id="Description">
+    <h2>Description détaillée</h2>
+	<p>
+		J'utiliserai la librairie Scikit-learn pour investiguer les techniques d'apprentissages classiques, et PyTorch pour les techniques d'apprentissage profond, une fois les données annotés. Pour les contraintes matériels, j'aurai accès à des GPU puissantes lorsqu'il s'agira d'entraîner les modèles, mais pour la phase de developpement logiciel, une machine ample suffit. En attendant l'annotation des données, j'envisage me familiariser avec les techniques non-supervisées, et en particulier, implémenter le modèle proposé dans l'article <a href="https://www.aclweb.org/anthology/W15-1509"> Short Text Clustering via Convolutional Neural Networks </a> à l'aide de PyTorch et le tester sur le jeu de données avant l'annotation.
+
+  </div>
+
+
+
+  <div id="Plan">
+
+    <h2>Plan de développement</h2>
+	
+	<p> Date de début: 10 septembre <br/> 
+		Date de fin : 1er décembre <br />
+		Date de présentation : à confirmer
+
+	</p>
+
+	
+	<p>Plan pour le mois de septembre (avant l'annotation des données) : </p>
+	
+	<ul>
+      <li>Se familiariser avec les techniques d'apprentissages non-supervisées </li>
+      <li>Prendre connaissance du jeu de données </li>
+      <li>Implémenter le modèle décrit dans l'article cité plus haut et le tester sur le jeu de données </li>
+	</ul>
+	
+	<p>À planifier (après l'annotation des données) : </p>
+	<ul>
+	  <li>Fusionnement des tweets avec informations personelles</li>
+	  <li>Étude de l'impact des informations personnelles sur la détection</li>
+	  <li>Exploration d'algorithmes d'apprentissage classique </li>
+	  <li>Exploration des méthodes d'apprentissage profond </li>
+	</ul>
+  </div>
+
+
+  <div id="Rapports">
+    <h2>Rapports d'avancement</h2>
+
+	<h3>Semaine 2 : 10 au 14 septembre</h3>
+
+	<p> 
+		Mise en place du site web <br/> 
+
+		Lecture approfondie de l'article <a href="https://www.aclweb.org/anthology/W15-1509"> Short Text Clustering via Convolutional Neural Networks </a> <br />
+
+	    Se familiariser avec le partionnement en k-moyennes (k-means clustering) 
+	</p> 
+	
+  </div>
+
+
+
+
+
+  <div id="RapportFinal">
+  	<h2>Résumé du rapport final</h2>
+  
+  </div>
+  
 </body>
+
 </html>
