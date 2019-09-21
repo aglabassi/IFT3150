@@ -26,7 +26,6 @@ class B_embeddor():
         return np.sign(B_hat)    
         
     def _get_similarity_calculator(n_neighbors, sigma):
-        
         def similarity_calculator(X):
             neighbors = NearestNeighbors(n_neighbors=n_neighbors, algorithm='ball_tree').fit(X)
             _, neighbors = neighbors.kneighbors(X)
