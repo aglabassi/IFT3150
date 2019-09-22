@@ -1,2 +1,2 @@
 We used pretrained twitter glove embeddings available here : https://nlp.stanford.edu/projects/glove/
-To convert from glove to word2vec format, we use gensim.scripts.glove2word2vec
+To convert from glove to word2vec format, we use gensim.scripts.glove2word2vec  
