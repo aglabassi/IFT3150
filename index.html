@@ -90,37 +90,51 @@
 	<p> 
 		Objectif :
 
-		Mise en place du site web <br/> 
+		<ul>
+      		<li> Mise en place du site web </li>
+      		<li> Lecture approfondie de l'article <a href="https://www.aclweb.org/anthology/W15-1509"> Short Text Clustering via Convolutional Neural Networks </a> </li>
+      		<li> Implémenter le modèle décrit dans l'article cité plus haut et le tester sur le jeu de données </li>
+      		<li> Se familiariser avec le partionnement en k-moyennes (k-means clustering) </li>
+		</ul>
 
-		Lecture approfondie de l'article <a href="https://www.aclweb.org/anthology/W15-1509"> Short Text Clustering via Convolutional Neural Networks </a> <br />
-
-	    Se familiariser avec le partionnement en k-moyennes (k-means clustering)  <br/>
-
-	    Bilan : les objectifs ont tous étés réalisés. Un résumé du modèle sera décrite dans le rapport finale, de même que sur la méthode des k-means.
+	    Bilan : <br/>
+	    les objectifs ont tous étés réalisés. Un résumé du modèle sera décrite dans le rapport finale, de même que sur la méthode des k-means.
 
 	</p> 
 
 
 	<h3>Semaine 2 : 16 au 23 septembre</h3>
 
-	<p> Objectif :
-		Commencer l'implémentation <br/>
-		Acquérire les embeddings <br/>
-		Coder des fonctions auxilliaire de traitement de l'inputs. <br/>
-		Coder le réseau de neuronnes convolutif <br/>
-		Coder la partie B <br/>
+	<p> 
+		Objectif :
+		<ul>
+      		<li> Commencer l'implémentation </li>
+      		<li> Acquérire les embeddings </li>
+      		<li> Coder des fonctions auxilliaire de traitement de l'inputs </li>
+      		<li> Coder le réseau de neuronnes convolutif  </li>
+      		<li> Coder l'embeddeur binaire  </li>
+		</ul>
 
-		Bilan: J'ai décidé de commencé par l'implémentation du B_embeddor, car il est nécessaire au fonctionnement du réseaux de neuronnes. J'ai été contraint à me documenter sur la méthode du "laplacian eighenmap" pour résoudre le problème d'optimisation permettant d'avoir le code binaire. Je me suis documenté sur son implementation sur sklearn, portant le nom de "spectral embedding". La bibliothèque propose des choix de matrices de similarités différentes que celle proposé dans l'article. J'ai donc été contraint d'implémenter le calculateur de matrices de similarités manuellement. Ensuite, j'ai testé le B_embeddor sur le dataset "The Digit Dataset", et les résultats furent prometteur : en utilisant le code binaire avec dimension q=10, soit 6 fois moins de features que les features original (32x32=64), l'accuracy fut de 86% (réduit) vs 88% (original) avec Naive Bayes. Je n'ai pas eu le temps de commencer l'implémentation du réseau de neuronnes convolutif.
+		Bilan: <br/> 
+		J'ai décidé de commencé par l'implémentation de l'embeddeur binaire, car il est nécessaire au fonctionnement du réseaux de neuronnes. J'ai été contraint à me documenter sur la méthode du "laplacian eighenmap" pour résoudre le problème d'optimisation permettant d'avoir le code binaire. Je me suis documenté sur son implementation sur sklearn, portant le nom de "spectral embedding". La bibliothèque propose des choix de matrices de similarités différentes que celle proposé dans l'article. J'ai donc été contraint d'implémenter le calculateur de matrices de similarités manuellement. Ensuite, j'ai testé l'embeddeur binaire sur le dataset "The Digit Dataset", et les résultats furent prometteur : en utilisant le code binaire avec dimension q=10, soit 6 fois moins de features que les features original 8x8=64), l'accuracy fut de 86% (réduit) vs 88% (original) avec Naive Bayes. Je n'ai pas eu le temps de commencer l'implémentation du réseau de neuronnes convolutif.
 
 	</p> 
 
 	<h3>Semaine 3 : 23 au 30 septembre</h3>
 
-	<p> Objectif :
-		Finir le réseau de neuronne convolutif <br/>
-		Finir le "main.py" (i.e mettre toute les parties ensemble)
-		Reccuillir les données brutes non-annotées <br/>
-		Tester, hyperparameter tuning <br/>
+	<p> 
+		Objectif :
+		<ul>
+      		<li> Finir l'implémentation du réseau de neuronne convolutif </li>
+      		<li> Finir le "main.py" (i.e mettre toute les parties ensemble) </li>
+      		<li> Coder des fonctions auxilliaire de traitement de l'inputs </li>
+      		<li> Reccuillir les données brutes non-annotées  </li>
+      		<li> Tester, hyperparameter tuning </li>
+		</ul>
+
+		Bilan: <br/> 
+		todo
+	
 	</p> 
 
 
