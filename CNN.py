@@ -16,7 +16,7 @@ import numpy as np
 #A convolutional neural network for text classification 
 class CNN(nn.Module):
     
-    def __init__(self, vocab_size, sentence_length, emb_weights=None, n_kernel1=4, n_kernel2=4, window_sizes1=[3], size2=2, k_top=3):
+    def __init__(self, vocab_size, sentence_length, emb_weights=None, n_kernel1=4, n_kernel2=4, size1=1, size2=2, k_top=3):
         
         super(CNN, self).__init__()          
         
@@ -30,73 +30,63 @@ class CNN(nn.Module):
          
         #inputs of format (N,1, embedding_dim, sentence_len),
         #output of format (N,n_kernel,embedding_dim, seentence_len+size-1)
-        self.convolutionners1 = nn.ModuleList([ nn.Conv2d(1, n_kernel1, (1,size), padding=(0, size-1) ) for size in window_sizes1  ])
+        self.conv1 = nn.Conv2d(1, n_kernel1, (1,size1), padding=(0, size1-1) )
         
         self.pooler = DynamicKMaxPooling(k_top,sentence_length, 2)
         
-        self.convonlutionner2 = nn.Conv2d(n_kernel1, n_kernel2, (1,size2), padding=(0,size2-1))
+        self.conv2 = nn.Conv2d(n_kernel1, n_kernel2, (1,size2), padding=(0,size2-1))
         
-        self.linear = nn.Linear(len(window_sizes1)*n_kernel2*k_top*embedding_dim,10)
+        self.linear = nn.Linear(k_top*embedding_dim,10)
       
         
     
     def forward(self,x):
-        return F.softmax(self.linear(self.get_hidden_representation(x)))
+        hidden_rep = self.get_hidden_representation(x)
+        #reshape to vector format
+        
+        hidden_rep = hidden_rep.view(hidden_rep.shape[0],hidden_rep.shape[1]*hidden_rep.shape[2])
+        
+        return F.softmax(self.linear(hidden_rep))
     
     
+    #return a emb/2 * k_top shaped matrix giving a reduced-dimension representation of a sentence (emb*len(s))
     def get_hidden_representation(self,x):        
         embedded = torch.unsqueeze(self.embedding(x), 1)
         embedded = torch.transpose(embedded, 2,3)
                 
-        conveds1 = [F.relu(convolutionner(embedded).squeeze(3)) for convolutionner in self.convolutionners1 ]
+        conved1 = F.relu(self.conv1(embedded).squeeze(3))
         
-        pooleds1 = [ self.pooler(conved, 1, embedded.shape[2])  for conved in conveds1 ]
+        pooled1 = self.pooler(conved1, 1, embedded.shape[2])
         
-        conveds2 = [ F.relu(self.convonlutionner2(pooled)) for pooled in pooleds1 ]
+        conved2 = F.relu(self.conv2(pooled1))
+
+        #fold(conved2)
         
-        #fold(conveds2)
+        pooled2 = self.pooler(conved2,2,embedded.shape[2])
         
-        pooleds2 = [ self.pooler(conved,2,embedded.shape[2]) for conved in conveds2 ]
+        #We get rid of the first dimension : kernel dimension
+        pooled2 = F.adaptive_max_pool2d(pooled2.transpose(1,2), (1,pooled2.shape[3])).squeeze()
         
-        cated = torch.cat(pooleds2, dim=1)
-        
-        cated = torch.transpose(cated, 2,3).contiguous()
-        
-        dimensions = cated.shape[0], cated.shape[1]*cated.shape[2]*cated.shape[3]
-        
-        cated = cated.view(dimensions[0], dimensions[1])
-        
-        print(cated.shape)
-        
-        return cated
+        return pooled2
         
         
 
 
-# Based on https://arxiv.org/pdf/1404.2188.pdf
-# Based on Anton Melnikov implementation
+#from https://arxiv.org/pdf/1404.2188.pdf
 class DynamicKMaxPooling(nn.Module):
     
-    def __init__(self, k_top, sentence_length, n_conv_layers):
+    def __init__(self, k_top, sentence_length, n_conv):
         super().__init__()
-        # "L is the total  number  of  convolutional  layers
-        # in  the  network;
-        # ktop is the fixed pooling parameter for the
-        # topmost  convolutional  layer" 
         self.k_top = k_top
         self.sentence_length = sentence_length
-        self.n_conv_layers = n_conv_layers
+        self.n_conv = n_conv
         
     
-    def forward(self, X, layer_idx, heigth):
-        # l is the current convolutional layer
-        # X is the input sequence
-        # s is the length of the sequence
-        # (for conv layers, the length dimension is last)
-        k_ll = ((self.n_conv_layers - layer_idx) / self.n_conv_layers) * self.sentence_length
-        k_l = round(max(self.k_top, np.ceil(k_ll)))
-        out = F.adaptive_max_pool2d(X, (heigth,int(k_l)))
-        return out
+    def forward(self, X, conv_idx, heigth):
+        temp = ((self.n_conv - conv_idx) / self.n_conv) * self.sentence_length
+        k_l = int(np.round( max(self.k_top, np.ceil(temp) )))
+        
+        return F.adaptive_max_pool2d(X, (heigth,k_l))
     
  
     
