@@ -38,7 +38,6 @@ class CNN(nn.Module):
         
         self.dynamic_pooler = DynamicKMaxPool(k_top, sentence_length, n_conv=2)
       
-        
     
     def forward(self,x):
         hidden_rep = self.get_hidden_representation(x)
