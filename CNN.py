@@ -30,20 +30,20 @@ class CNN(nn.Module):
          
         #inputs of format (N,1, embedding_dim, sentence_len),
         #output of format (N,n_kernel,embedding_dim, seentence_len+size-1)
-        self.conv1 = nn.Conv2d(1, n_kernel1, (1,size1), padding=(0, size1-1) )
-        
-        self.pooler = DynamicKMaxPooling(k_top,sentence_length, 2)
+        self.conv1 = nn.Conv2d(1, n_kernel1, (1,size1), padding=(0, size1-1))
         
         self.conv2 = nn.Conv2d(n_kernel1, n_kernel2, (1,size2), padding=(0,size2-1))
-        
+    
         self.linear = nn.Linear(k_top*embedding_dim,10)
+        
+        self.dynamic_pooler = DynamicKMaxPool(k_top, sentence_length, n_conv=2)
       
         
     
     def forward(self,x):
         hidden_rep = self.get_hidden_representation(x)
-        #reshape to vector format
         
+        #reshape to vector format
         hidden_rep = hidden_rep.view(hidden_rep.shape[0],hidden_rep.shape[1]*hidden_rep.shape[2])
         
         return F.softmax(self.linear(hidden_rep))
@@ -52,17 +52,17 @@ class CNN(nn.Module):
     #return a emb/2 * k_top shaped matrix giving a reduced-dimension representation of a sentence (emb*len(s))
     def get_hidden_representation(self,x):        
         embedded = torch.unsqueeze(self.embedding(x), 1)
-        embedded = torch.transpose(embedded, 2,3)
+        embedded = torch.transpose(embedded, 2, 3)
                 
         conved1 = F.relu(self.conv1(embedded).squeeze(3))
         
-        pooled1 = self.pooler(conved1, 1, embedded.shape[2])
+        pooled1 = self.dynamic_pooler(conved1, 1, embedded.shape[2])
         
         conved2 = F.relu(self.conv2(pooled1))
 
         #fold(conved2)
         
-        pooled2 = self.pooler(conved2,2,embedded.shape[2])
+        pooled2 = self.dynamic_pooler(conved2,2,embedded.shape[2])
         
         #We get rid of the first dimension : kernel dimension
         pooled2 = F.adaptive_max_pool2d(pooled2.transpose(1,2), (1,pooled2.shape[3])).squeeze()
@@ -72,8 +72,8 @@ class CNN(nn.Module):
         
 
 
-#from https://arxiv.org/pdf/1404.2188.pdf
-class DynamicKMaxPooling(nn.Module):
+#inspired from https://arxiv.org/pdf/1404.2188.pdf
+class DynamicKMaxPool(nn.Module):
     
     def __init__(self, k_top, sentence_length, n_conv):
         super().__init__()
