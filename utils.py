@@ -39,7 +39,7 @@ def raw_texts_to_sequences(texts, tokenizer, vocab):
 
 
 #Given texts, returns it bag-of-words representation, using idf    
-def BoW(texts, tokenizer):
+def texts_to_bow(texts, tokenizer):
   
   vectorizer = TfidfVectorizer(tokenizer, strip_accents='unicode', use_idf=True)
   
