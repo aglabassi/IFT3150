@@ -11,6 +11,12 @@ from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords as sw
 import re
 from bs4 import BeautifulSoup
+import pandas as pd
+
+
+from tensorflow.keras.preprocessing.sequence import pad_sequences
+from sklearn.feature_extraction.text import TfidfVectorizer
+
 
 #A custom tokenizer that prepocess and tokenize tweets
 class TwitterPreprocessorTokenizer():
@@ -51,4 +57,49 @@ class TwitterPreprocessorTokenizer():
         cleaned_document = cleaned_document.lower()
         
         return cleaned_document
+
+def get_twitter_dataset(path):
+    
+    #Getting data from first file, 30% offensive
+    df1 = pd.read_csv(path, sep = "\t" )
+    pos = df1[ df1["target"] == 1 ]
+    neg = df1[ df1["target"] == 0 ]
+    
+    df1 = pd.concat([ pos, neg.iloc[:len(pos),] ])
+    
+    return df1
+
+#Transform texts in sequence of tokens' indexs in vocab
+def text_to_sequence(texts, tokenizer, vocab):
+        
+        tkzd_texts = [ tokenizer(text) for text in texts ]
+        
+        def get_idxs(tkzd_text):
+            sequence = []
+            for word in tkzd_text:
+                try:
+                    sequence.append(vocab[word].index)
+                except:
+                    ''                
+            return sequence
+        
+        #Getting the sequences
+        sequences = [ get_idxs(tkzd_text) for tkzd_text in tkzd_texts ]
+           
+        #Padding for getting a square matrix
+        maxlen = max([len(x) for x in sequences])
+        X = pad_sequences(sequences, padding='post', maxlen=maxlen)
+        
+        return X
+      
+
+
+#Given texts, returns it bag-of-words representation, using idf    
+def text_to_bow(texts, tokenizer):
+  
+  vectorizer = TfidfVectorizer(tokenizer, strip_accents='unicode', use_idf=True)
+  
+  return vectorizer.fit_transform(texts)
+  
+
   
