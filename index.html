@@ -47,7 +47,7 @@
   <div id="Description">
     <h2>Description détaillée</h2>
 	<p>
-		J'utiliserai la librairie Scikit-learn pour investiguer les techniques d'apprentissages classiques, et PyTorch pour les techniques d'apprentissage profond, une fois les données annotés. Pour les contraintes matériels, j'aurai accès à des GPU puissantes lorsqu'il s'agira d'entraîner les modèles, mais pour la phase de developpement logiciel, une machine ample suffit. En attendant l'annotation des données, j'envisage me familiariser avec les techniques non-supervisées, et en particulier, implémenter le modèle proposé dans l'article <a href="https://www.aclweb.org/anthology/W15-1509"> Short Text Clustering via Convolutional Neural Networks </a> à l'aide de PyTorch et le tester sur le jeu de données avant l'annotation.
+		J'utiliserai la librairie Scikit-learn pour investiguer les techniques d'apprentissages classiques, et PyTorch pour les techniques d'apprentissage profond, une fois les données annotés. Pour les contraintes matériels, j'aurai accès à des GPU puissantes lorsqu'il s'agira d'entraîner les modèles, mais pour la phase de developpement logiciel, une machine ample suffit. En attendant l'annotation des données, j'envisage me familiariser avec les techniques non-supervisées, et en particulier, implémenter le modèle proposé dans l'article <a href="https://www.aclweb.org/anthology/W15-1509"> Short Text Clustering via Convolutional Neural Networks (Xu) </a> à l'aide de PyTorch et le tester sur le jeu de données avant l'annotation.
 
   </div>
 
@@ -93,7 +93,6 @@
 		<ul>
       		<li> Mise en place du site web </li>
       		<li> Lecture approfondie de l'article <a href="https://www.aclweb.org/anthology/W15-1509"> Short Text Clustering via Convolutional Neural Networks </a> </li>
-      		<li> Implémenter le modèle décrit dans l'article cité plus haut et le tester sur le jeu de données </li>
       		<li> Se familiariser avec le partionnement en k-moyennes (k-means clustering) </li>
 		</ul>
 
@@ -132,8 +131,21 @@
 		</ul>
 
 		Bilan: <br/>  
-		todo
+		J'ai fini l'implémentation du CNN. J'ai toutefois sous-estimé le temps que cela me prendrait : l'article décrivait de manière très "haut niveau" le fonctionnement du CNN. J'ai donc du me documenter plus en profondeur sur l'architecture du modèle proposé, et j'ai donc lu l'article <a href="https://www.aclweb.org/anthology/P14-1062/"> A Convolutional Neural Network for Modelling Sentences (Kalchbrenner) </a>  qui décrivait la même architecture que celle proposé dans <i>Xu </i>. Cela m'a permis d'appronfondir mes connaissances sur les architectures des réseaux de neuronnes utilisé pour modeliser des phrases (et non pas pour les classifier). En particulier, j'ai implémenté le "Dynamic k-Max Pooling" tel que expliqué dans <i> Kalchbrenner <i/>  à l'aide de Pytorch.
 	
+	</p> 
+
+	<h3>Semaine 4 : 1 au 7 octobre </h3>
+
+	<p> 
+		Objectif :
+		<ul>
+      		<li> Tester tous le système sur le dataset <a href="https://competitions.codalab.org/competitions/20011"> OffensEval 2019 et debugger </a>  </li>
+      		<li> Receuillir le dataset cible (depression et suicide sur Twitter)
+		</ul>
+
+		Bilan: <br/>  
+		
 	</p> 
 
 
