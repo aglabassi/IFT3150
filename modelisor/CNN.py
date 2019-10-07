@@ -12,7 +12,6 @@ import torch.nn as nn
 import torch.nn.functional as F
 import numpy as np
 
-
 #A convolutional neural network for text classification 
 class CNN(nn.Module):
     
@@ -87,14 +86,8 @@ class DynamicKMaxPool(nn.Module):
         
         return F.adaptive_max_pool2d(X, (heigth,k_l))
     
- 
-    
-batch = torch.randint(0,433,(32,70))
-cnn = CNN(500,70)
-cnn(batch)
-    
-    
 
-        
-        
-       
+
+batch = torch.randint(0,433,(32,70))
+cnn = CNN(433,70)
+cnn(batch)      
