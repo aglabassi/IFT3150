@@ -12,7 +12,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 import numpy as np
 
-#A convolutional neural network for text classification 
+#A convolutional neural network for text modelisation
 class CNN(nn.Module):
     
     def __init__(self, vocab_size, sentence_length, emb_weights=None, n_kernel1=4, n_kernel2=4, size1=1, size2=2, k_top=3):
