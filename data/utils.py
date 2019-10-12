@@ -71,10 +71,8 @@ def get_twitter_dataset(path):
 
 #Transform texts in sequence of tokens' indexs in vocab
 def text_to_sequence(texts, tokenizer, vocab):
-        
-        tkzd_texts = [ tokenizer(text) for text in texts ]
-        
-        def get_idxs(tkzd_text):
+    
+    def get_idxs(tkzd_text):
             sequence = []
             for word in tkzd_text:
                 try:
@@ -82,15 +80,19 @@ def text_to_sequence(texts, tokenizer, vocab):
                 except:
                     ''                
             return sequence
+    
+    maxlen = 0
+    sequences = ["0"]*texts.shape[0]
+    for i,text in enumerate(texts):
+        tkzd_text = tokenizer(text)
+        sequence = get_idxs(tkzd_text)
+        maxlen = max(maxlen, len(sequence))
+        sequences[i] = sequence
         
-        #Getting the sequences
-        sequences = [ get_idxs(tkzd_text) for tkzd_text in tkzd_texts ]
-           
-        #Padding for getting a square matrix
-        maxlen = max([len(x) for x in sequences])
-        X = pad_sequences(sequences, padding='post', maxlen=maxlen)
         
-        return X
+    X = pad_sequences(sequences, padding='post', maxlen=maxlen)
+        
+    return X
       
 
 
