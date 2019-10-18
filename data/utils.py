@@ -12,6 +12,7 @@ from nltk.corpus import stopwords as sw
 import re
 from bs4 import BeautifulSoup
 import pandas as pd
+import numpy as np
 
 
 from tensorflow.keras.preprocessing.sequence import pad_sequences
@@ -60,12 +61,11 @@ class TwitterPreprocessorTokenizer():
 
 def get_twitter_dataset(path):
     
-    #Getting data from first file, 30% offensive
-    df1 = pd.read_csv(path, sep = "\t" )
-    pos = df1[ df1["target"] == 1 ]
+    df1 = pd.read_csv(path, encoding="ISO-8859-1", header=None, names=["target", "s","s","s","s","text"])
+    pos = df1[ df1["target"] == 4 ]
     neg = df1[ df1["target"] == 0 ]
     
-    df1 = pd.concat([ pos, neg.iloc[:len(pos),] ])
+    df1 = pd.concat([ pos, neg ])
     
     return df1
 
