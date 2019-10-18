@@ -1,0 +1,2 @@
+We use Sentiment140 dataset, available here : https://www.kaggle.com/kazanova/sentiment140
+This dataset should allow learning clustering positive/negative polarity sentences.
