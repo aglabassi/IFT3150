@@ -32,7 +32,7 @@ else:
 
 def load_src(name, fpath):
     import os, imp
-    return imp.load_source(name, os.path.join(os.path.dirname(__file__), fpath))
+    return imp.load_source(name, os.path.join(os.path.dirname('__file__'), fpath))
 
 load_src("data_utils", PATH+"data/utils.py" )
 load_src("embeddor", PATH+"embeddor/BinaryEmbeddor.py" )
@@ -45,7 +45,7 @@ load_src("modelisor_utils", PATH+"modelisor/utils.py" )
 import pandas as pd
 from data_utils import get_twitter_dataset
 
-data = get_twitter_dataset("data/training.1600000.processed.noemoticon.csv")
+data = get_twitter_dataset(PATH+"data/training.1600000.processed.noemoticon.csv")
 data = data.sample(frac=1)
 sentences, labels = data["text"], data["target"]
 
