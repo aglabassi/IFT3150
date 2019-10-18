@@ -23,16 +23,16 @@ def narray_to_tensor_dataset(X_train, X_test, y_train, y_test, device):
     return TensorDataset(inputs_train, targets_train), TensorDataset(inputs_test, targets_test)
     
 
-def train_model(net, X_train, y_train, X_valid, y_valid, criterion, optimizer, device, batch_size=4):
+def train_model(net, X_train, y_train, X_valid, y_valid, criterion, optimizer, device, batch_size=16):
     
     #Tensorifying
     train, valid =  narray_to_tensor_dataset(X_train, X_valid, y_train, y_valid, device)
     trainloader = DataLoader(train, batch_size=batch_size)
+    testloader = DataLoader(valid, batch_size=X_valid.shape[0]) #whole batch
     
     net.train()
-    epoch_loss = 0
-    epoch_loss_valid = 0
-    total = 0
+    
+    epoch_losses = []
     for i, data in enumerate(trainloader, 0):
         #Computing predictions
         inputs, targets = data
@@ -43,24 +43,28 @@ def train_model(net, X_train, y_train, X_valid, y_valid, criterion, optimizer, d
         loss = criterion(outputs, targets)
         loss.backward()
         optimizer.step()
-        with torch.no_grad():
-            epoch_loss+=loss
-            total+=1
-            print(outputs)
-            print(loss)
         
-#        #Getting loss for validation set
-#        inputs = torch.tensor([ list(instance[0]) for instance in valid ])
-#        targets = torch.tensor([ instance[1] for instance in valid ])
-#        outputs = net(inputs)
-#        with torch.no_grad():
-#            t = criterion(outputs, targets)
-#            epoch_loss_valid += t
-#            print(t)
-            
-    return epoch_loss/total, epoch_loss_valid/total
-#
+        #updating statistics
+        with torch.no_grad():
+            epoch_losses.append(loss)
     
+    net.eval()
+    
+    epoch_valid_losses = []
+    with torch.no_grad():
+        for data in testloader:
+            inputs, targets = data
+            outputs = net(inputs)
+            loss = criterion(outputs, targets)
+            epoch_valid_losses.append(loss)
+    
+                                
+    return np.mean(epoch_losses), np.mean(epoch_valid_losses)
+
+
+    
+
+#
         
 
 ## import some data to play with, testing

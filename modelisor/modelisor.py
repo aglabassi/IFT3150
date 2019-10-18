@@ -15,7 +15,8 @@ import numpy as np
 #A convolutional neural network for text modelisation
 class CNN(nn.Module):
     
-    def __init__(self, vocab_size, sentence_length, emb_weights=None, n_kernel1=4, n_kernel2=4, size1=1, size2=2, k_top=3):
+    def __init__(self, vocab_size, sentence_length, emb_weights=None, 
+                 n_kernel1=64, n_kernel2=64, size1=3, size2=4, bin_dim=10, k_top=3):
         
         super(CNN, self).__init__()          
         
@@ -33,7 +34,7 @@ class CNN(nn.Module):
         
         self.conv2 = nn.Conv2d(n_kernel1, n_kernel2, (1,size2), padding=(0,size2-1))
     
-        self.linear = nn.Linear(k_top*embedding_dim,10)
+        self.linear = nn.Linear(k_top*embedding_dim, bin_dim)
         
         self.dynamic_pooler = DynamicKMaxPool(k_top, sentence_length, n_conv=2)
       
@@ -48,7 +49,10 @@ class CNN(nn.Module):
     
     
     #return a emb/2 * k_top shaped matrix giving a reduced-dimension representation of a sentence (emb*len(s))
-    def get_hidden_representation(self,x):        
+    def get_hidden_representation(self,x): 
+        
+        #x is of shape (N, sentence_length)
+        
         embedded = torch.unsqueeze(self.embedding(x), 1)
         embedded = torch.transpose(embedded, 2, 3)
                 
@@ -87,7 +91,3 @@ class DynamicKMaxPool(nn.Module):
         return F.adaptive_max_pool2d(X, (heigth,k_l))
     
 
-
-batch = torch.randint(0,433,(32,70))
-cnn = CNN(433,70)
-cnn(batch)      
