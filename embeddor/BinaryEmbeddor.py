@@ -17,10 +17,10 @@ import numpy as np
 
 class BinaryEmbeddor():
   
-    def __init__(self, emb_dim=10, n_neighbors=300, rbf_cst=1):
+    def __init__(self, bin_dim=10, n_neighbors=300, rbf_cst=1):
         similarity_calculator = BinaryEmbeddor._get_similarity_calculator(n_neighbors, rbf_cst)
-        self.embedding = SpectralEmbedding(n_components=emb_dim, affinity=similarity_calculator)
-    
+        self.embedding = SpectralEmbedding(n_components=bin_dim, affinity=similarity_calculator)
+        
     def __call__(self,X):
         unormalized_binary_embs = self.embedding.fit_transform(X)
         return (np.sign(unormalized_binary_embs)+1)/2    
