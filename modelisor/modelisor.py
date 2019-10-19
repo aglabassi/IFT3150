@@ -45,7 +45,7 @@ class CNN(nn.Module):
         #reshape to vector format
         hidden_rep = hidden_rep.view(hidden_rep.shape[0],hidden_rep.shape[1]*hidden_rep.shape[2])
         
-        return F.softmax(self.linear(hidden_rep))
+        return torch.sigmoid(self.linear(hidden_rep))
     
     
     #return a emb/2 * k_top shaped matrix giving a reduced-dimension representation of a sentence (emb*len(s))
