@@ -48,21 +48,21 @@ load_src("modelisor_utils", PATH+"modelisor/utils.py" )
 import pandas as pd
 
 data = pd.read_csv(PATH+"data/twitter160polarity_mixed.csv", 
-                   encoding="ISO-8859-1") #0 for negative polarity, 1 for positive
+                   encoding="ISO-8859-1") 
 data = data[:4000]
 
 sentences, labels = data["text"], data["target"]
 
 #------------------------------------------------------------------------------
 #Getting pretrained word embeddings and vocab
-#
-#import gensim
-#
-#WORD_EMBEDDINGS_DIM = 100 #25,50,100,200 values
-#
-#word_emb_path = 'word_embeddings/w2v.twitter.27B.' + str(WORD_EMBEDDINGS_DIM)+ 'd.txt'
-#model = gensim.models.KeyedVectors.load_word2vec_format(PATH+word_emb_path)
-#vocab = model.vocab
+
+import gensim
+
+WORD_EMBEDDINGS_DIM = 200 #25,50,100,200 values
+
+word_emb_path = 'word_embeddings/w2v.twitter.27B.' + str(WORD_EMBEDDINGS_DIM)+ 'd.txt'
+model = gensim.models.KeyedVectors.load_word2vec_format(PATH+word_emb_path)
+vocab = model.vocab
 
 #------------------------------------------------------------------------------
 #Feature extraction
@@ -72,7 +72,7 @@ from data_utils import TwitterPreprocessorTokenizer, text_to_sequence, text_to_b
 
 t = time.time()
 tokenizer = TwitterPreprocessorTokenizer(stem=False,stopwords=True)
-#word_idxs = text_to_sequence(sentences, tokenizer, vocab)
+word_idxs = text_to_sequence(sentences, tokenizer, vocab)
 bows = text_to_bow(sentences, tokenizer)
 t = time.time() - t
 
@@ -82,7 +82,7 @@ print("Feature extraction completed after ", t, " seconds" )
 #Get the binary low dim sentence representation (embedded sentences)
 
 USE_PRETRAIN_BIN_EMBS = False
-BIN_DIM = 10
+BIN_DIM = 20
 
 bin_emb_path = 'embeddor/bin_embs_'+str(BIN_DIM)+'d.csv'
 
@@ -104,6 +104,7 @@ else:
     
 TRAIN_SIZE=0.8
 DEL = int(len(word_idxs)*TRAIN_SIZE)
+
 X_train, bin_train = word_idxs[:DEL], lowdim_sentences_embs[:DEL]
 X_test, bin_test = word_idxs[DEL:], lowdim_sentences_embs[DEL:]
 
@@ -123,6 +124,7 @@ EPOCHS = 20
 BATCH_SIZE = 16
 K_TOP = 3
 LEARNING_RATE = 0.001
+
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
