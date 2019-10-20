@@ -10,6 +10,8 @@ in the output layer.
 @author: Abdel
 """
 
+import time
+
 #------------------------------------------------------------------------------
 #If in google colab
 
@@ -20,6 +22,7 @@ if IN_COLAB:
     import nltk
     drive.mount('/content/gdrive/')
     nltk.download('punkt')
+    nltk.download('stopwords')
     PATH = 'gdrive/My Drive/IFT3150/'
 
 else:
@@ -43,46 +46,58 @@ load_src("modelisor_utils", PATH+"modelisor/utils.py" )
 #Load data
 
 import pandas as pd
-from data_utils import get_twitter_dataset
 
-data = get_twitter_dataset(PATH+"data/training.1600000.processed.noemoticon.csv")
-data = data.sample(frac=1)
+data = pd.read_csv(PATH+"data/twitter160polarity_mixed.csv", 
+                   encoding="ISO-8859-1") #0 for negative polarity, 1 for positive
+data = data[:4000]
+
 sentences, labels = data["text"], data["target"]
 
 #------------------------------------------------------------------------------
 #Getting pretrained word embeddings and vocab
-
-import gensim
-
-WORD_EMBEDDINGS_DIM = 100 #25,50,100,200 values
-
-word_emb_path = 'word_embeddings/w2v.twitter.27B.' + str(WORD_EMBEDDINGS_DIM)+ 'd.txt'
-model = gensim.models.KeyedVectors.load_word2vec_format(PATH+word_emb_path)
-vocab = model.vocab
+#
+#import gensim
+#
+#WORD_EMBEDDINGS_DIM = 100 #25,50,100,200 values
+#
+#word_emb_path = 'word_embeddings/w2v.twitter.27B.' + str(WORD_EMBEDDINGS_DIM)+ 'd.txt'
+#model = gensim.models.KeyedVectors.load_word2vec_format(PATH+word_emb_path)
+#vocab = model.vocab
 
 #------------------------------------------------------------------------------
-#Get idx and BoW representation of inputs (idxs and bagofword)
+#Feature extraction
+#Get idx and BoW representation of inputs (idxs and bagofword) 
 
 from data_utils import TwitterPreprocessorTokenizer, text_to_sequence, text_to_bow
 
+t = time.time()
 tokenizer = TwitterPreprocessorTokenizer(stem=False,stopwords=True)
-word_idxs = text_to_sequence(sentences, tokenizer, vocab)
+#word_idxs = text_to_sequence(sentences, tokenizer, vocab)
 bows = text_to_bow(sentences, tokenizer)
+t = time.time() - t
+
+print("Feature extraction completed after ", t, " seconds" )
 
 #------------------------------------------------------------------------------
 #Get the binary low dim sentence representation (embedded sentences)
 
 USE_PRETRAIN_BIN_EMBS = False
-BIN_DIM = 20
+BIN_DIM = 10
 
 bin_emb_path = 'embeddor/bin_embs_'+str(BIN_DIM)+'d.csv'
 
 if USE_PRETRAIN_BIN_EMBS:  
     lowdim_sentences_embs = pd.read_csv(PATH+bin_emb_path, sep=',').values
 else:
+    t = time.time()
     from embeddor import BinaryEmbeddor
     lowdim_sentences_embs = BinaryEmbeddor(bin_dim=BIN_DIM)(bows.todense())
     pd.DataFrame(lowdim_sentences_embs).to_csv(PATH+bin_emb_path, index=False)
+    t = time.time() - t
+    print("binary embeddings trained get after ", t, "seconds for n_inputs= ", 
+          len(sentences))
+
+
 
 #------------------------------------------------------------------------------
 #Simple train / valid split
