@@ -59,7 +59,7 @@ vocab = model_we.vocab
 
 #------------------------------------------------------------------------------
 #Feature extraction
-#Get idx and BoW representation of inputs (idxs and bagofword) 
+#Get sequence representation of inputs
 
 from data_utils import TwitterPreprocessorTokenizer, text_to_sequence
 
@@ -71,22 +71,24 @@ from sklearn.model_selection import train_test_split
 X_train, X_valid, y_train, y_valid = train_test_split(word_idxs, labels)
 
 #------------------------------------------------------------------------------
-#Build the model
+#Produce the classifer
 
 from CNN_classifier import CNN_clf
 
-TRAIN = True
-BATCH_SIZE = 32
+#Hyperparameters
+BATCH_SIZE = 16
 EPOCHS = 3
+N_FILTER = 512
+FILTER_SIZES = [3,4,5]
+DROP = 0.3
 
-cnn = CNN_clf(model_we.vectors, X_train.shape[1])
-if TRAIN:
-    cnn.fit(X_train, y_train, batch_size=BATCH_SIZE, epochs=EPOCHS, validation_data=(X_valid, y_valid))
-    cnn.save_weights('polarity_clf.h5')
-else:
-    cnn.load_weights('polarity_clf.h5')
+cnn = CNN_clf(model_we.vectors, X_train.shape[1],
+              n_filter=N_FILTER, filter_sizes=FILTER_SIZES, drop=DROP)
 
-preds = cnn.predict(X_valid)
+cnn.fit(X_train, y_train, batch_size=BATCH_SIZE, epochs=EPOCHS, validation_data=(X_valid, y_valid))
+
+cnn.save_weights('polarity_clf.h5')
+
     
     
 
