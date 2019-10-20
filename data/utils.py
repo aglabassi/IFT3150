@@ -59,15 +59,15 @@ class TwitterPreprocessorTokenizer():
         
         return cleaned_document
 
-def get_twitter_dataset(path):
-    
-    df1 = pd.read_csv(path, encoding="ISO-8859-1", header=None, names=["target", "s","s","s","s","text"])
-    pos = df1[ df1["target"] == 4 ]
-    neg = df1[ df1["target"] == 0 ]
-    
-    df1 = pd.concat([ pos, neg ])
-    
-    return df1
+#def get_twitter_dataset(path):
+#    
+#    df1 = pd.read_csv(path, encoding="ISO-8859-1", header=None, names=["target", "s","s","s","s","text"])
+#    pos = df1[ df1["target"] == 4 ]
+#    neg = df1[ df1["target"] == 0 ]
+#    
+#    df1 = pd.concat([ pos, neg ])
+#    
+#    return df1
 
 #Transform texts in sequence of tokens' indexs in vocab
 def text_to_sequence(texts, tokenizer, vocab):
