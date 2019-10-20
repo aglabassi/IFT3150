@@ -47,7 +47,7 @@
   <div id="Description">
     <h2>Description détaillée</h2>
 	<p>
-		J'utiliserai la librairie Scikit-learn pour investiguer les techniques d'apprentissages classiques, et PyTorch pour les techniques d'apprentissage profond, une fois les données annotés. Pour les contraintes matériels, j'aurai accès à des GPU puissantes lorsqu'il s'agira d'entraîner les modèles, mais pour la phase de developpement logiciel, une machine ample suffit. En attendant l'annotation des données, j'envisage me familiariser avec les techniques non-supervisées, et en particulier, implémenter le modèle proposé dans l'article <a href="https://www.aclweb.org/anthology/W15-1509"> Short Text Clustering via Convolutional Neural Networks (Xu) </a> à l'aide de PyTorch et le tester sur le jeu de données avant l'annotation.
+		J'utiliserai la librairie Scikit-learn pour investiguer les techniques d'apprentissages classiques, et PyTorch pour les techniques d'apprentissage profond, une fois les données annotés. Pour les contraintes matériels, j'aurai accès à des GPU puissantes lorsqu'il s'agira d'entraîner les modèles, mais pour la phase de developpement logiciel, une machine ample suffit. En attendant l'annotation des données, j'envisage me familiariser avec les techniques non-supervisées, et en particulier, implémenter le modèle proposé dans l'article <a href="https://www.aclweb.org/anthology/W15-1509.pdf"> Short Text Clustering via Convolutional Neural Networks (Xu) </a> à l'aide de PyTorch et le tester sur le jeu de données avant l'annotation.
 
   </div>
 
@@ -91,7 +91,7 @@
 
 		<ul>
       		<li> Mise en place du site web </li>
-      		<li> Lecture approfondie de l'article <a href="https://www.aclweb.org/anthology/W15-1509"> Short Text Clustering via Convolutional Neural Networks </a> </li>
+      		<li> Lecture approfondie de l'article <a href="https://www.aclweb.org/anthology/W15-1509.pdf"> Short Text Clustering via Convolutional Neural Networks </a> </li>
       		<li> Se familiariser avec le partionnement en k-moyennes (k-means clustering) </li>
 		</ul>
 
@@ -130,14 +130,14 @@
 		</ul>
 
 		Bilan: <br/>  
-		J'ai fini l'implémentation du CNN. J'ai toutefois sous-estimé le temps que cela me prendrait : l'article décrivait de manière très "haut niveau" le fonctionnement du CNN. J'ai donc du me documenter plus en profondeur sur l'architecture du modèle proposé, et j'ai donc lu l'article <a href="https://www.aclweb.org/anthology/P14-1062/"> A Convolutional Neural Network for Modelling Sentences (Kalchbrenner) </a>  qui décrivait la même architecture que celle proposé dans <i>Xu </i>. Cela m'a permis d'appronfondir mes connaissances sur les architectures des réseaux de neuronnes utilisé pour modeliser des phrases (et non pas pour les classifier). En particulier, j'ai implémenté le "Dynamic k-Max Pooling" tel que expliqué dans <i> Kalchbrenner </i>  à l'aide de Pytorch.
+		J'ai fini l'implémentation du CNN de modélisation. J'ai toutefois sous-estimé le temps que cela me prendrait : l'article décrivait de manière très "haut niveau" le fonctionnement du CNN. J'ai donc du me documenter plus en profondeur sur l'architecture du modèle proposé, et j'ai donc lu l'article <a href="https://www.aclweb.org/anthology/P14-1062.pdf"> A Convolutional Neural Network for Modelling Sentences (Kalchbrenner) </a>  qui décrivait la même architecture que celle proposé dans <i>Xu </i>. Cela m'a permis d'appronfondir mes connaissances sur les architectures des réseaux de neuronnes utilisé pour modeliser des phrases (et non pas pour les classifier). En particulier, j'ai implémenté le "Dynamic k-Max Pooling" tel que expliqué dans <i> Kalchbrenner </i>  à l'aide de Pytorch.
 	
 	</p> 
 
 	<h3>Semaine 4 : 1 au 7 octobre </h3>
 
 	<p> 
-		Objectif :
+		Objectif : <br/>
 		<ul>
       		<li> Tester tous le système sur le dataset <a href="https://competitions.codalab.org/competitions/20011"> OffensEval 2019</a> et debugger   </li>
       		<li> Receuillir le dataset cible (depression et suicide sur Twitter) </li>
@@ -150,14 +150,15 @@
 	<h3>Semaine 5 : 7 au 14 octobre </h3>
 
 	<p> 
+		Note: je planifie mettre moins de temps cette semaine pour le projet, en raison de la mi-session.<br/>
 		Objectif :
-		Note: je planifie mettre moins de temps cette semaine pour le projet, en raison de la mi-session.
 		<ul>
 			<li> Se documenter sur l'entrainement de réseaux neuronnaux pour la modélisation de phrase </li>
       		<li> Coder la fonction train_model et la tester </li>
 		</ul>
 
-		Bilan:  J'ai codé la fonction train_model, toutefois, l'apprentissage ne se fait pas comme prévue : 
+		Bilan: <br/> 
+		J'ai codé la fonction train_model, toutefois, l'apprentissage ne se fait pas comme prévue : 
 		le loss ne diminue pas. Je vais régler ce problème après la semaine de relache. J'ai également récolté le dataset Sentiment140, qui est plus pertinent que le OffenEval 2019 dans le contexte qui m'a été donné.
 		
 	</p> 
@@ -165,21 +166,28 @@
 	<h3>Semaine 5 : 14 au 21 octobre </h3>
 
 	<p> 
+		Note: je planifie mettre moins de temps cette semaine pour le projet, en raison de la mi-session.<br/>
 		Objectif :
-		Note: je planifie mettre moins de temps cette semaine pour le projet, en raison de la mi-session.
 		<ul>
 			<li> Se documenter sur l'entrainement de réseaux neuronnaux via GPU</li>
       		<li> Apprendre à utiliser CUDA et Google Colab (pour lancer les calculs d'entrainment sur des GPUs puissantes de Google) </li>
 		</ul>
 
-		Bilan: Tout est beau. il reste a jouer avec le main.py sur google colab en tant que fichier notebook
+		Bilan: Tout a été réalisé.
 		
 	</p> 
 
 	<h3>Semaine 5 : 21 au 30 octobre </h3>
 
 	<p> 
-		NOTE : Je me suis réorioenter dans mon projet. Le but étant de classifier des tweets en tant que dépressive/non dépressive, j'ai alors codé un classificateur de polarité de phrase ( à l'aide du dataset Sentiment140, contenant 1.6millions de tweets labellé). Ce classificateur permet donc d'affirmer avec grande certitude si un tweet est de polarité positif (et donc non-dépressive). Pour les tweet à polarité négative, c'est plus compliqué :  je compte faire un clustering dans ce sous-ensemble de tweet (i.e en excluant les tweets à polarité positive) avec le modède de Xu que j'ai implémenté. J'espère ainsi pouvoir clusterer entre les tweets depressive/non-depressive dans un ensemble de tweet à polarité négative.
+		 Je me suis réorioenter dans mon projet. Le but étant de classifier des tweets en tant que dépressive/non dépressive, j'ai alors codé un classificateur de polarité de phrase ( à l'aide du dataset Sentiment140, contenant 1.6millions de tweets labellé). Ce classificateur permet donc d'affirmer avec grande certitude si un tweet est de polarité positif (et donc non-dépressive). Le modèle propsé dans <a href="https://arxiv.org/pdf/1408.5882.pdf"> Convolutional Neural Networks for Sentence Classification (Kim) </a> me semble prometteur, j'ai donc opté pour celui la !  <br/>
+
+		 Pour les tweet à polarité négative, c'est plus compliqué :  je compte faire un clustering dans ce sous-ensemble de tweet (i.e en excluant les tweets à polarité positive) avec le modède de Xu que j'ai implémenté. J'espère ainsi pouvoir clusterer entre les tweets depressive/non-depressive dans un ensemble de tweet à polarité négative. <br/>  <br/> 
+
+		Bilan : <br/> 
+
+		J'ai implémenté le modèle proposé dans l'article <a href="https://arxiv.org/pdf/1408.5882.pdf"> Convolutional Neural Networks for Sentence Classification </a> . <br/> 
+		J'ai corrigé le bug de la fonction train_model pour le modelisateur : le problème était que j'appliqué un <i> softmax </i> au lieu d'appliquer un <i> sigmoid </i> à la dernière couche du CNN modélisateur. En effet, entrainer ce NN avec comme code binaire à la "output layer" peut être vue comme un problème de classification multiclasse, mais avec classe multiple, pour une instance donnée !
 		
 		
 	</p> 
