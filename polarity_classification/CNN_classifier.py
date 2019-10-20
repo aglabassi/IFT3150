@@ -5,37 +5,53 @@ Created on Sun Oct 20 12:29:17 2019
 
 @author: Abdel
 """
-import tensorflow as tf
-import tensorflow.keras.layers as layers
+
+from tensorflow.keras.models import Model
+from tensorflow.keras.layers import Input, Embedding,Reshape, Conv2D, MaxPool2D, Concatenate, Flatten, Dropout, Dense
 from tensorflow.keras.initializers import Constant
 
 
- # Deep CNN (diegoschapira)
+ # inspired from "Convolutional Neural Networks for Sentence Classification" 
+ #(Yoon Kim), https://arxiv.org/pdf/1408.5882.pdf
 class CNN_clf():
-    def __init__(self, embedding_weigths, sequence_length):
-        model = tf.keras.Sequential()
+    def __init__(self, embedding_weigths, sequence_length,
+                 drop=0.5, n_filter=512, filter_sizes=[3,4,5]):
         
-        model.add(layers.Embedding(embedding_weigths.shape[0],
+        inputs = Input(shape=(sequence_length,), dtype='int32')
+        
+        embedding_layer = Embedding(embedding_weigths.shape[0],
                                     embedding_weigths.shape[1],
                                     embeddings_initializer=Constant(embedding_weigths),
                                     input_length=sequence_length,
-                                    trainable=False))
+                                    trainable=False)
         
-        model.add(layers.Conv1D(128, 7, activation='relu',padding='same'))
-        model.add(layers.MaxPooling1D())
-        model.add(layers.Conv1D(256, 5, activation='relu',padding='same'))
-        model.add(layers.MaxPooling1D())
-        model.add(layers.Conv1D(512, 3, activation='relu',padding='same'))
-        model.add(layers.MaxPooling1D())
-        model.add(layers.Flatten())
-        model.add(layers.Dense(128, activation='relu'))
-        model.add(layers.Dropout(0.5))
-        model.add(layers.Dense(1, activation='sigmoid'))
-        model.compile(optimizer='adam',
-                      loss='binary_crossentropy',
-                      metrics=['accuracy'])
+        embedding = embedding_layer(inputs)
         
-        self.model = model
+        reshape = Reshape((sequence_length,embedding_weigths.shape[1] ,1))(embedding)
+        
+        convs = []
+        for filter_size in filter_sizes: 
+            convs.append( Conv2D(n_filter, 
+                                 kernel_size=(filter_size,embedding_weigths.shape[1]),
+                                 padding='valid',
+                                 kernel_initializer='normal', 
+                                 activation='relu')(reshape))
+        maxpools = []
+        for i,filter_size in enumerate(filter_sizes):
+            maxpools.append( MaxPool2D(pool_size=(sequence_length - filter_size + 1, 1),
+                                       strides=(1,1), 
+                                       padding='valid')(convs[i]) )
+        
+        
+        concatenated_tensor = Concatenate(axis=1)(maxpools)
+        flatten = Flatten()(concatenated_tensor)
+        dropout = Dropout(drop)(flatten)
+        output = Dense(units=1, activation='sigmoid')(dropout)
+        
+        self.model = Model(inputs=inputs, outputs=output)
+        self.model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
+        
+     
     
     def __str__(self):
         string_list = []
