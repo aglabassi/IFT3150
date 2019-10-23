@@ -13,9 +13,9 @@ from tensorflow.keras.initializers import Constant
 
  # inspired from "Convolutional Neural Networks for Sentence Classification" 
  #(Yoon Kim), https://arxiv.org/pdf/1408.5882.pdf
-class CNN_clf():
+class CNN_classifier():
     def __init__(self, embedding_weights, sequence_length,
-                 drop=0.5, n_filter=512, filter_sizes=[3,4,5]):
+                 drop=0.5, n_filter=256, filter_sizes=[2,3,4]):
         
         vocab_size = embedding_weights.shape[0]
         embedding_dim = embedding_weights.shape[1]

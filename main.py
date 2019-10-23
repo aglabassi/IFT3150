@@ -41,6 +41,7 @@ load_src("data_utils", PATH+"data/utils.py" )
 load_src("embeddor", PATH+"embeddor/BinaryEmbeddor.py" )
 load_src("modelisor_", PATH+"modelisor/modelisor.py" )
 load_src("modelisor_utils", PATH+"modelisor/utils.py" )
+load_src("CNN_classifier", PATH+"polarity/CNN_classifier.py")
 
 #------------------------------------------------------------------------------
 #Load data
@@ -61,8 +62,8 @@ import gensim
 WORD_EMBEDDINGS_DIM = 200 #25,50,100,200 values
 
 word_emb_path = 'word_embeddings/w2v.twitter.27B.' + str(WORD_EMBEDDINGS_DIM)+ 'd.txt'
-model = gensim.models.KeyedVectors.load_word2vec_format(PATH+word_emb_path)
-vocab = model.vocab
+model_we = gensim.models.KeyedVectors.load_word2vec_format(PATH+word_emb_path)
+vocab = model_we.vocab
 
 #------------------------------------------------------------------------------
 #Feature extraction
@@ -70,13 +71,22 @@ vocab = model.vocab
 
 from data_utils import TwitterPreprocessorTokenizer, text_to_sequence, text_to_bow
 
-t = time.time()
-tokenizer = TwitterPreprocessorTokenizer(stem=False,stopwords=True)
-word_idxs = text_to_sequence(sentences, tokenizer, vocab)
-bows = text_to_bow(sentences, tokenizer)
-t = time.time() - t
+BIG_SENTENCE_LENGTH = 111 #DONT MODIFY
 
-print("Feature extraction completed after ", t, " seconds" )
+tokenizer = TwitterPreprocessorTokenizer(stem=False,remove_stopwords=False)
+word_idxs = text_to_sequence(sentences, tokenizer, vocab, 
+                             maxlen_absolute=BIG_SENTENCE_LENGTH)
+bows = text_to_bow(sentences, tokenizer)
+
+#------------------------------------------------------------------------------
+#Polarity classification
+
+from CNN_classifier import CNN_classifier
+    
+polarity_clf = CNN_classifier(model_we.vectors, BIG_SENTENCE_LENGTH)
+polarity_clf.load_weights('polarity/polarity_clf.h5')
+polarities = polarity_clf.predict(word_idxs)
+ 
 
 #------------------------------------------------------------------------------
 #Get the binary low dim sentence representation (embedded sentences)
@@ -128,8 +138,8 @@ LEARNING_RATE = 0.001
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-cnn_modelisor = CNN(vocab_size=len(vocab), sentence_length=word_idxs.shape[1], \
-                    emb_weights=torch.FloatTensor(model.vectors),  k_top=K_TOP)
+cnn_modelisor = CNN(vocab_size=len(vocab), sentence_length=BIG_SENTENCE_LENGTH, \
+                    emb_weights=torch.FloatTensor(model_we.vectors),  k_top=K_TOP)
 cnn_modelisor.to(device)
 
 criterion = BCELoss()
@@ -146,7 +156,6 @@ for epoch in range(EPOCHS):
     
     
     
-
 X_train_reduced = cnn_modelisor.get_hidden_representation(torch.tensor(X_train, dtype=torch.long))
 
 

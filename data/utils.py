@@ -60,7 +60,7 @@ class TwitterPreprocessorTokenizer():
 
 
 #Transform texts in sequence of tokens' indexs in vocab
-def text_to_sequence(texts, tokenizer, vocab):
+def text_to_sequence(texts, tokenizer, vocab, maxlen_absolute=None):
     
     def get_idxs(tkzd_text):
             sequence = []
@@ -71,15 +71,15 @@ def text_to_sequence(texts, tokenizer, vocab):
                     ''                
             return sequence
     
-    maxlen = 0
+    maxlen_relative = 0
     sequences = ["0"]*texts.shape[0]
     for i,text in enumerate(texts):
         tkzd_text = tokenizer(text)
         sequence = get_idxs(tkzd_text)
-        maxlen = max(maxlen, len(sequence))
+        maxlen_relative = max(maxlen_relative, len(sequence))
         sequences[i] = sequence
         
-        
+    maxlen = maxlen_absolute if maxlen_absolute is not None else maxlen_relative
     X = pad_sequences(sequences, padding='post', maxlen=maxlen)
         
     return X
