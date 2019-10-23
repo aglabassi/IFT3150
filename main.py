@@ -48,7 +48,9 @@ load_src("CNN_classifier", PATH+"polarity/CNN_classifier.py")
 
 import pandas as pd
 
-data = pd.read_csv(PATH+"data/twitter160polarity_mixed.csv", 
+#Waiting for the official data to be approved by ethic comittee.
+
+data = pd.read_csv(PATH+"data/twitter160polarity_mixed.csv",
                    encoding="ISO-8859-1") 
 data = data[:4000]
 
