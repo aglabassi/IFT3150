@@ -42,7 +42,7 @@ import pandas as pd
 
 data = pd.read_csv(PATH+"data/twitter160polarity_mixed.csv", 
                    encoding="ISO-8859-1") #0 for negative polarity, 1 for positive
-data = data[:160000]
+data = data[:500000]
 
 sentences, labels = data["text"].values, data["target"].values
 
@@ -63,7 +63,7 @@ vocab = model_we.vocab
 
 from data_utils import TwitterPreprocessorTokenizer, text_to_sequence
 
-tokenizer = TwitterPreprocessorTokenizer(stem=False,stopwords=True)
+tokenizer = TwitterPreprocessorTokenizer(stem=False,remove_stopwords=False)
 word_idxs = text_to_sequence(sentences, tokenizer, vocab)
 
 #train/valid split
@@ -76,11 +76,11 @@ X_train, X_valid, y_train, y_valid = train_test_split(word_idxs, labels)
 from CNN_classifier import CNN_clf
 
 #Hyperparameters
-BATCH_SIZE = 16
-EPOCHS = 3
-N_FILTER = 512
-FILTER_SIZES = [3,4,5]
-DROP = 0.3
+BATCH_SIZE = 8
+EPOCHS = 4
+N_FILTER = 256
+FILTER_SIZES = [2,3,4]
+DROP = 0.5
 
 cnn = CNN_clf(model_we.vectors, X_train.shape[1],
               n_filter=N_FILTER, filter_sizes=FILTER_SIZES, drop=DROP)
@@ -89,8 +89,7 @@ cnn.fit(X_train, y_train, batch_size=BATCH_SIZE, epochs=EPOCHS, validation_data=
 
 cnn.save_weights('polarity_clf.h5')
 
-    
-    
+
 
 
 

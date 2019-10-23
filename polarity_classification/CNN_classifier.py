@@ -14,25 +14,28 @@ from tensorflow.keras.initializers import Constant
  # inspired from "Convolutional Neural Networks for Sentence Classification" 
  #(Yoon Kim), https://arxiv.org/pdf/1408.5882.pdf
 class CNN_clf():
-    def __init__(self, embedding_weigths, sequence_length,
+    def __init__(self, embedding_weights, sequence_length,
                  drop=0.5, n_filter=512, filter_sizes=[3,4,5]):
+        
+        vocab_size = embedding_weights.shape[0]
+        embedding_dim = embedding_weights.shape[1]
         
         inputs = Input(shape=(sequence_length,), dtype='int32')
         
-        embedding_layer = Embedding(embedding_weigths.shape[0],
-                                    embedding_weigths.shape[1],
-                                    embeddings_initializer=Constant(embedding_weigths),
+        embedding_layer = Embedding(vocab_size,
+                                    embedding_dim,
+                                    embeddings_initializer=Constant(embedding_weights),
                                     input_length=sequence_length,
                                     trainable=False)
         
         embedding = embedding_layer(inputs)
         
-        reshape = Reshape((sequence_length,embedding_weigths.shape[1] ,1))(embedding)
+        reshape = Reshape((sequence_length,embedding_dim ,1))(embedding)
         
         convs = []
         for filter_size in filter_sizes: 
             convs.append( Conv2D(n_filter, 
-                                 kernel_size=(filter_size,embedding_weigths.shape[1]),
+                                 kernel_size=(filter_size,embedding_dim),
                                  padding='valid',
                                  kernel_initializer='normal', 
                                  activation='relu')(reshape))

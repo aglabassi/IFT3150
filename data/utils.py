@@ -20,9 +20,9 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 #A custom tokenizer that prepocess and tokenize tweets
 class TwitterPreprocessorTokenizer():
     
-    def __init__(self, stem=True, stopwords=True): 
+    def __init__(self, stem=True, remove_stopwords=True): 
       
-        self.stopwords =  set(sw.words('english')) if stopwords else set()
+        self.stopwords =  set(sw.words('english')) if remove_stopwords else set()
         self.stem = SnowballStemmer("english",True).stem if stem else lambda x:x
             
         
