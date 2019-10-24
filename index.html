@@ -10,8 +10,8 @@
 <body>
   
 
-  <h1>IFT3150 - Projet d'informatique</h1>
-  <h2> Détection de dépression et de suicide sur Twitter </h2>
+  <h1>IFT3150 - Projet d'informatique en traitement automatique du langage naturel</h1>
+  <h2> Détection de dépression et de suicide sur Twitter d'une manière non-supervisée </h2>
   <h2>Par Abdel Ghani Labassi </h2>
   <h2>Supervisé par <a href="http://rali.iro.umontreal.ca/nie/jian-yun-nie/"> Prof. Jian-Yun Nie </a></h2>
 
@@ -39,7 +39,7 @@
 	  </p> 
 
 	<p> 
-  		La tâche de détection peut être vue comme une tâche de classification: est-ce qu'un post sur Twitter (un tweet) montre des signaux de dépression ou de suicide? Pour cela, nous allons explorer différents types d'informations: les mots dans le post, le sentiment que ces mots expriment, les caractéristiques de l'utilisateur (e.g. fréquence d'utilisation de Twitter), le cercle d'amis sur Twitter, etc. Ces informations seront extraites à partir des données de Twitter en utilisant l'extraction de l'information et des outils de traitement de langue naturelle. Parmi les techniques de classification envisagées, nous allons tester des techniques de classification classiques comme Naive Bayes, l'arbre de décision, mais aussi les techniques d'apprentissage profond (e.g. représenter des mots par des embeddings). Ces techniques, supervisés, devront être investigués seulement l'annotation des données complétés par des chercheurs de McGill. En attente de cela, je vais explorer les techniques non-supervisées pour mieux comprendre la structure du jeu de données receuilli.
+  		La tâche de détection peut être vue comme une tâche de classification: est-ce qu'un post sur Twitter (un tweet) montre des signaux de dépression ou de suicide? Pour cela, nous allons explorer différents types d'informations: les mots dans le post, le sentiment que ces mots expriment, les caractéristiques de l'utilisateur (e.g. fréquence d'utilisation de Twitter), le cercle d'amis sur Twitter, etc. Ces informations seront extraites à partir des données de Twitter en utilisant l'extraction de l'information et des outils de traitement de langue naturelle. Parmi les techniques de classification envisagées, nous allons tester des techniques de classification classiques comme Naive Bayes, l'arbre de décision, mais aussi les techniques d'apprentissage profond (e.g. représenter des mots par des embeddings). Ces techniques, supervisés, devront être investigués seulement l'annotation des données complétés par des chercheurs de McGill. En attente de cela, je vais explorer la fesabilité d'une telle détection en utilisant les techniques non-supervisées, en ajoutant comme information supplémentaire la polarité émotionnelle, information accessible via un classificateur entrainé sur le jeu de donnée <a href="https://www.kaggle.com/kazanova/sentiment140"> Sentiment140</a> .
     </p>
   </div>
 
@@ -47,7 +47,11 @@
   <div id="Description">
     <h2>Description détaillée</h2>
 	<p>
-		J'utiliserai la librairie Scikit-learn pour investiguer les techniques d'apprentissages classiques, et PyTorch pour les techniques d'apprentissage profond, une fois les données annotés. Pour les contraintes matériels, j'aurai accès à des GPU puissantes lorsqu'il s'agira d'entraîner les modèles, mais pour la phase de developpement logiciel, une machine ample suffit. En attendant l'annotation des données, j'envisage me familiariser avec les techniques non-supervisées, et en particulier, implémenter le modèle proposé dans l'article <a href="https://www.aclweb.org/anthology/W15-1509.pdf"> Short Text Clustering via Convolutional Neural Networks (Xu) </a> à l'aide de PyTorch et le tester sur le jeu de données avant l'annotation.
+		J'utiliserai la librairie Scikit-learn pour les techniques d'apprentissages classiques, PyTorch pour l'implémentation de réseaux de neuronnes "non-standards", et Keras pour l'implémentation de réseaux de neuronnes "standards". Pour les contraintes matériels, j'aurai accès à des GPU puissantes lorsqu'il s'agira d'entraîner les modèles, via Google Colab. Pour la phase de developpement logiciel, une machine ample suffit, et je developperai dans l'IDE Spyder. <br/><br/>
+
+		J'envisage me familiariser avec les techniques non-supervisées, et en particulier, implémenter le modèle proposé dans l'article <a href="https://www.aclweb.org/anthology/W15-1509.pdf"> Short Text Clustering via Convolutional Neural Networks (Xu) </a> (CNN modélisateur) à l'aide de PyTorch et Sci-Kit Learn. <br/><br/>
+
+		Pour obtenir un classificateur entrainé pour analyser la polarité émotionnelle, j'ai décidé d'implémenter le CNN décrit dans l'article <a href="https://arxiv.org/pdf/1408.5882.pdf"> Convolutional Neural Networks for Sentence Classification (Kim) </a> (CNN classificateur) , que j'entrainerai avec le jeu de donné <a href="https://www.kaggle.com/kazanova/sentiment140"> Sentiment140</a>, contenant 1.6 millions de tweets annotées.
 
   </div>
 
@@ -68,14 +72,13 @@
 	
 	<ul>
       <li>Se familiariser avec les techniques d'apprentissages non-supervisées </li>
-      <li>Prendre connaissance du jeu de données </li>
-      <li>Implémenter le modèle décrit dans l'article cité plus haut et le tester sur le jeu de données </li>
+      <li>Implémenter le modèle de Xu </li>
 	</ul>
 	
-	<p>À planifier (après l'annotation des données) : </p>
+	<p>À planifier : </p>
 	<ul>
-	  <li>Entrainer + tester le modèle sur les jeux de données </li>
-	  <li>Comparer avec l'approche supervisé en utilisant un RNN </li>
+	  <li>Ajouter comme information supplémentaire la polarité émotionnelle </li>
+	   <li>Prendre connaissance du jeu de donnée (on attend l'autorisation des comités éthiques) </li>
 
 	</ul>
   </div>
@@ -114,7 +117,7 @@
 		</ul>
 
 		Bilan: <br/> 
-		J'ai décidé de commencé par l'implémentation de l'embeddeur binaire, car il est nécessaire au fonctionnement du réseaux de neuronnes. J'ai été contraint à me documenter sur la méthode du "laplacian eighenmap" (que je résumerai dans le rappport final) pour résoudre le problème d'optimisation permettant d'avoir le code binaire. Je me suis documenté sur son implementation sur sklearn, portant le nom de "spectral embedding". La bibliothèque propose des choix de matrices de similarités différentes que celle proposé dans l'article. J'ai donc été contraint d'implémenter le calculateur de matrices de similarités manuellement. Ensuite, j'ai testé l'embeddeur binaire sur le dataset "The Digit Dataset", et les résultats furent prometteur : en utilisant le code binaire avec dimension q=10, soit 6 fois moins de features que les features original (8x8=64), l'accuracy fut de 86% (réduit) vs 88% (original) avec Naive Bayes. Je n'ai pas eu le temps de commencer l'implémentation du réseau de neuronnes convolutif.
+		J'ai décidé de commencé par l'implémentation de l'embeddeur binaire, car il est nécessaire au fonctionnement du réseaux de neuronnes. J'ai été contraint à me documenter sur la méthode du "Laplacian Eighenmap" (que je résumerai dans le rappport final) pour résoudre le problème d'optimisation permettant d'avoir le code binaire. Je me suis documenté sur son implementation sur sklearn, portant le nom de "spectral embedding". La bibliothèque propose des choix de matrices de similarités différentes que celle proposé dans l'article. J'ai donc été contraint d'implémenter le calculateur de matrices de similarités manuellement. Ensuite, j'ai testé l'embeddeur binaire sur le dataset "The Digit Dataset", et les résultats furent prometteur : en utilisant le code binaire avec dimension q=10, soit 6 fois moins de features que les features original (8x8=64), l'accuracy fut de 86% (réduit) vs 88% (original) avec Naive Bayes. Je n'ai pas eu le temps de commencer l'implémentation du réseau de neuronnes convolutif.
 
 	</p> 
 
@@ -125,8 +128,6 @@
 		<ul>
       		<li> Finir l'implémentation du réseau de neuronne convolutif </li>
       		<li> Finir le "main.py" (i.e mettre toute les parties ensemble) </li>
-      		<li> Reccuillir les données brutes non-annotées  </li>
-      		<li> Tester, hyperparameter tuning </li>
 		</ul>
 
 		Bilan: <br/>  
@@ -143,7 +144,7 @@
       		<li> Receuillir le dataset cible (depression et suicide sur Twitter) </li>
 		</ul>
 
-		Bilan: J'ai réalisé qu'il fallait beaucoup de travail pour entrainer le réseau de neuronne. J'ai commencé à me documenter sur cela, en particulier comment entrainer les réseaux de neuronnes pour la modélisation de phrase.
+		Bilan: J'ai réalisé qu'il fallait beaucoup de travail pour entrainer le réseau de neuronne. J'ai commencé à me documenter sur cela, en particulier comment entrainer les réseaux de neuronnes pour la modélisation de phrase. Je n'ai pas pu receuillir le dataset cible car on attend toujours les comités éthiques.
 		
 	</p> 
 
@@ -159,7 +160,7 @@
 
 		Bilan: <br/> 
 		J'ai codé la fonction train_model, toutefois, l'apprentissage ne se fait pas comme prévue : 
-		le loss ne diminue pas. Je vais régler ce problème après la semaine de relache. J'ai également récolté le dataset Sentiment140, qui est plus pertinent que le OffenEval 2019 dans le contexte qui m'a été donné.
+		le loss ne diminue pas. Je vais régler ce problème après la semaine de relache.
 		
 	</p> 
 
@@ -180,14 +181,28 @@
 	<h3>Semaine 5 : 21 au 30 octobre </h3>
 
 	<p> 
-		 Je me suis réorioenter dans mon projet. Le but étant de classifier des tweets en tant que dépressive/non dépressive, j'ai alors codé un classificateur de polarité de phrase ( à l'aide du dataset Sentiment140, contenant 1.6millions de tweets labellé). Ce classificateur permet donc d'affirmer avec grande certitude si un tweet est de polarité positif (et donc non-dépressive). Le modèle propsé dans <a href="https://arxiv.org/pdf/1408.5882.pdf"> Convolutional Neural Networks for Sentence Classification (Kim) </a> me semble prometteur, j'ai donc opté pour celui la !  <br/>
+		Objectif :
+		<ul>
+			<li> Se documenter sur les meilleurs classificateur de textes (supervisés)</li>
+      		<li> Lecture appronfondie de <a href="https://arxiv.org/pdf/1408.5882.pdf"> Convolutional Neural Networks for Sentence Classification (Kim) </a>  </li>
+		</ul>
 
-		 Pour les tweet à polarité négative, c'est plus compliqué :  je compte faire un clustering dans ce sous-ensemble de tweet (i.e en excluant les tweets à polarité positive) avec le modède de Xu que j'ai implémenté. J'espère ainsi pouvoir clusterer entre les tweets depressive/non-depressive dans un ensemble de tweet à polarité négative. <br/>  <br/> 
+
+		Remarque :<br/>
+		Le but étant de clusterer des tweets en tant que dépressive/non dépressive, j'ai alors codé un classificateur de polarité de phrase. Ce classificateur permettrai donc d'évaluer avec certitude relativement grande la polarité émotionelle d'un tweet . Aprés plusieurs recherches, j'ai décidé d'implémenté le modèle de <i> Kim </i>
+		car un CNN est plus facile à entrainer qu'un RNN, et fournirai une meilleur performance sur des documents de taille petite (<a href="https://towardsdatascience.com/text-classification-rnns-or-cnn-s-98c86a0dd361"> Text Classification — RNN’s or CNN’s?</a>).<br/> <br/> 
 
 		Bilan : <br/> 
 
-		J'ai implémenté le modèle proposé dans l'article <a href="https://arxiv.org/pdf/1408.5882.pdf"> Convolutional Neural Networks for Sentence Classification </a> . <br/> 
-		J'ai corrigé le bug de la fonction train_model pour le modelisateur : le problème était que j'appliqué un <i> softmax </i> au lieu d'appliquer un <i> sigmoid </i> à la dernière couche du CNN modélisateur. En effet, entrainer ce NN avec comme code binaire à la "output layer" peut être vue comme un problème de classification multiclasse, mais avec classe multiple, pour une instance donnée !
+		J'ai implémenté le CNN classificateur décrit par Kim . <br/> 
+		J'ai corrigé le bug de la fonction train_model pour le CNN modélisateur : le problème était que j'appliqué un <i> softmax </i> au lieu d'appliquer un <i> sigmoid </i> à la dernière couche. En effet, entrainer ce CNN avec comme code binaire à la "output layer" peut être vue comme un problème de classification multiclasse, mais avec classe multiple, pour une instance donnée !<br/> 
+		
+		
+	</p>
+
+	<h3>Semaine 5 : 1 au 7 novembre </h3>
+
+	<p> 
 		
 		
 	</p> 
