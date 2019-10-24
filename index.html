@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 
 
@@ -193,7 +192,8 @@
 		Objectif :
 		<ul>
 			<li> Se documenter sur les meilleurs classificateur de textes (supervisés)</li>
-      		<li> Lecture appronfondie de <a href="https://arxiv.org/pdf/1408.5882.pdf"> Convolutional Neural Networks for Sentence Classification (Kim) </a>  </li>
+			<li> Lecture de l'article <a href="https://arxiv.org/pdf/1702.01923.pdf"> Comparative Study of CNN and RNN for Natural Language Processing </a>   
+      		<li> Lecture appronfondie de l'article  <a href="https://arxiv.org/pdf/1408.5882.pdf"> Convolutional Neural Networks for Sentence Classification (Kim) </a>  </li>
 		</ul>
 
 
@@ -202,8 +202,8 @@
 		car un CNN est plus facile à entrainer qu'un RNN, et fournirai une meilleur performance sur des documents de taille petite (<a href="https://towardsdatascience.com/text-classification-rnns-or-cnn-s-98c86a0dd361"> Text Classification — RNN’s or CNN’s?</a>). Après avoir ajuster les hyperparamètres, j'obtiens une accuracy de 80.3%<br/> <br/> 
 
 		Bilan : <br/> 
-
-		J'ai implémenté le CNN classificateur décrit par Kim . <br/> 
+		J'ai lu les articles <br/> 
+		J'ai implémenté le CNN classificateur décrit par Kim  <br/> 
 		J'ai corrigé le bug de la fonction train_model pour le CNN modélisateur : le problème était que j'appliqué un <i> softmax </i> au lieu d'appliquer un <i> sigmoid </i> à la dernière couche. En effet, entrainer ce CNN avec comme code binaire à la "output layer" peut être vue comme un problème de classification multiclasse, mais avec classe multiple, pour une instance donnée !<br/> 
 		
 		
