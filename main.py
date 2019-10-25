@@ -50,8 +50,7 @@ import pandas as pd
 
 #Waiting for the official data to be approved by ethic comittee.
 
-data = pd.read_csv(PATH+"data/twitter160polarity_mixed.csv",
-                   encoding="ISO-8859-1") 
+data = pd.read_csv(PATH+"data/twitter160polarity_mixed.csv", encoding="ISO-8859-1") 
 data = data[:4000]
 
 sentences, labels = data["text"], data["target"]
@@ -61,7 +60,7 @@ sentences, labels = data["text"], data["target"]
 
 import gensim
 
-WORD_EMBEDDINGS_DIM = 200 #25,50,100,200 values
+WORD_EMBEDDINGS_DIM = 200 #DONT MODIFY
 
 word_emb_path = 'word_embeddings/w2v.twitter.27B.' + str(WORD_EMBEDDINGS_DIM)+ 'd.txt'
 model_we = gensim.models.KeyedVectors.load_word2vec_format(PATH+word_emb_path)
@@ -76,19 +75,18 @@ from data_utils import TwitterPreprocessorTokenizer, text_to_sequence, text_to_b
 BIG_SENTENCE_LENGTH = 111 #DONT MODIFY
 
 tokenizer = TwitterPreprocessorTokenizer(stem=False,remove_stopwords=False)
-word_idxs = text_to_sequence(sentences, tokenizer, vocab, 
-                             maxlen_absolute=BIG_SENTENCE_LENGTH)
+word_idxs = text_to_sequence(sentences, tokenizer, vocab, maxlen_absolute=BIG_SENTENCE_LENGTH)
 bows = text_to_bow(sentences, tokenizer)
 
 #------------------------------------------------------------------------------
-#Polarity classification
+#Get emotional polarities
 
 from CNN_classifier import CNN_classifier
-    
+
 polarity_clf = CNN_classifier(model_we.vectors, BIG_SENTENCE_LENGTH)
 polarity_clf.load_weights('polarity/polarity_clf.h5')
-polarities = polarity_clf.predict(word_idxs)
- 
+emotional_polarities = polarity_clf.predict(word_idxs) #0:negative. 1:positive
+
 
 #------------------------------------------------------------------------------
 #Get the binary low dim sentence representation (embedded sentences)
@@ -106,8 +104,7 @@ else:
     lowdim_sentences_embs = BinaryEmbeddor(bin_dim=BIN_DIM)(bows.todense())
     pd.DataFrame(lowdim_sentences_embs).to_csv(PATH+bin_emb_path, index=False)
     t = time.time() - t
-    print("binary embeddings trained get after ", t, "seconds for n_inputs= ", 
-          len(sentences))
+    print("binary embeddings trained get after ", t, "seconds for n_inputs= ", len(sentences))
 
 
 
