@@ -57,7 +57,7 @@
 	<p>
 		J'utiliserai la librairie Scikit-learn pour les techniques d'apprentissages classiques, PyTorch pour l'implémentation de réseaux de neuronnes "non-standards", et Keras pour l'implémentation de réseaux de neuronnes "standards". Pour les contraintes matériels, j'aurai accès à des GPU puissantes lorsqu'il s'agira d'entraîner les modèles, via Google Colab. Pour la phase de developpement logiciel, une machine ample suffit, et je developperai dans l'IDE Spyder. <br/><br/>
 
-		J'envisage me familiariser avec les techniques non-supervisées, et en particulier, implémenter le modèle proposé dans l'article <a href="https://www.aclweb.org/anthology/W15-1509.pdf"> Short Text Clustering via Convolutional Neural Networks (Xu) </a> (CNN modélisateur) à l'aide de PyTorch et Sci-Kit Learn. <br/><br/>
+		J'envisage me familiariser avec les techniques non-supervisées, et en particulier, implémenter le modèle proposé dans l'article <a href="https://www.aclweb.org/anthology/W15-1509.pdf"> Short Text Clustering via Convolutional Neural Networks (Xu) </a> (CNN modélisateur) à l'aide de PyTorch et Scikit Learn. <br/><br/>
 
 		Pour obtenir un classificateur entrainé pour analyser la polarité émotionnelle, j'ai décidé d'implémenter le CNN décrit dans l'article <a href="https://arxiv.org/pdf/1408.5882.pdf"> Convolutional Neural Networks for Sentence Classification (Kim) </a> (CNN classificateur) , que j'entrainerai avec le jeu de donné <a href="https://www.kaggle.com/kazanova/sentiment140"> Sentiment140</a>, contenant 1.6 millions de tweets annotées.
 
@@ -120,12 +120,12 @@
       		<li> Commencer l'implémentation </li>
       		<li> Acquérire les embeddings </li>
       		<li> Coder des fonctions auxilliaire de traitement de l'inputs </li>
-      		<li> Coder le réseau de neuronnes convolutif  </li>
+      		<li> Coder le CNN modélisateur  </li>
       		<li> Coder l'embeddeur binaire  </li>
 		</ul>
 
 		Bilan: <br/> 
-		J'ai décidé de commencé par l'implémentation de l'embeddeur binaire, car il est nécessaire au fonctionnement du réseaux de neuronnes. J'ai été contraint à me documenter sur la méthode du "Laplacian Eighenmap" (que je résumerai dans le rappport final) pour résoudre le problème d'optimisation permettant d'avoir le code binaire. Je me suis documenté sur son implementation sur sklearn, portant le nom de "spectral embedding". La bibliothèque propose des choix de matrices de similarités différentes que celle proposé dans l'article. J'ai donc été contraint d'implémenter le calculateur de matrices de similarités manuellement. Ensuite, j'ai testé l'embeddeur binaire sur le dataset "The Digit Dataset", et les résultats furent prometteur : en utilisant le code binaire avec dimension q=10, soit 6 fois moins de features que les features original (8x8=64), l'accuracy fut de 86% (réduit) vs 88% (original) avec Naive Bayes. Je n'ai pas eu le temps de commencer l'implémentation du réseau de neuronnes convolutif.
+		J'ai décidé de commencé par l'implémentation de l'embeddeur binaire, car il est nécessaire au fonctionnement du réseaux de neuronnes. J'ai été contraint à me documenter sur la méthode du "Laplacian Eighenmap" (que je résumerai dans le rappport final) pour résoudre le problème d'optimisation permettant d'avoir le code binaire. Je me suis documenté sur son implementation sur sklearn, portant le nom de "spectral embedding". La bibliothèque propose des choix de matrices de similarités différentes que celle proposé dans l'article. J'ai donc été contraint d'implémenter le calculateur de matrices de similarités manuellement. Ensuite, j'ai testé l'embeddeur binaire sur le dataset "The Digit Dataset", et les résultats furent prometteur : en utilisant le code binaire avec dimension q=10, soit 6 fois moins de features que les features original (8x8=64), l'accuracy fut de 86% (réduit) vs 88% (original) avec Naive Bayes. Je n'ai pas eu le temps de commencer l'implémentation du CNN modélisateur.
 
 	</p> 
 
@@ -134,12 +134,12 @@
 	<p> 
 		Objectif :
 		<ul>
-      		<li> Finir l'implémentation du réseau de neuronne convolutif </li>
+      		<li> Finir l'implémentation du CNN modéliseur </li>
       		<li> Finir le "main.py" (i.e mettre toute les parties ensemble) </li>
 		</ul>
 
 		Bilan: <br/>  
-		J'ai fini l'implémentation du CNN de modélisation. J'ai toutefois sous-estimé le temps que cela me prendrait : l'article décrivait de manière très "haut niveau" le fonctionnement du CNN. J'ai donc du me documenter plus en profondeur sur l'architecture du modèle proposé, et j'ai donc lu l'article <a href="https://www.aclweb.org/anthology/P14-1062.pdf"> A Convolutional Neural Network for Modelling Sentences (Kalchbrenner) </a>  qui décrivait la même architecture que celle proposé dans <i>Xu </i>. Cela m'a permis d'appronfondir mes connaissances sur les architectures des réseaux de neuronnes utilisé pour modeliser des phrases (et non pas pour les classifier). En particulier, j'ai implémenté le "Dynamic k-Max Pooling" tel que expliqué dans <i> Kalchbrenner </i>  à l'aide de Pytorch.
+		J'ai fini l'implémentation du CNN modélisateur. J'ai toutefois sous-estimé le temps que cela me prendrait : l'article décrivait de manière très "haut niveau" le fonctionnement du CNN. J'ai donc du me documenter plus en profondeur sur l'architecture du modèle proposé, et j'ai donc lu l'article <a href="https://www.aclweb.org/anthology/P14-1062.pdf"> A Convolutional Neural Network for Modelling Sentences (Kalchbrenner) </a>  qui décrivait la même architecture que celle proposé dans <i>Xu </i>. Cela m'a permis d'appronfondir mes connaissances sur les architectures des réseaux de neuronnes utilisé pour modeliser des phrases (et non pas pour les classifier). En particulier, j'ai implémenté le "Dynamic k-Max Pooling" tel que expliqué dans <i> Kalchbrenner </i>  à l'aide de Pytorch.
 	
 	</p> 
 
@@ -152,7 +152,8 @@
       		<li> Receuillir le dataset cible (depression et suicide sur Twitter) </li>
 		</ul>
 
-		Bilan: J'ai réalisé qu'il fallait beaucoup de travail pour entrainer le réseau de neuronne. J'ai commencé à me documenter sur cela, en particulier comment entrainer les réseaux de neuronnes pour la modélisation de phrase. Je n'ai pas pu receuillir le dataset cible car on attend toujours les comités éthiques.
+		Bilan: <br/>
+		J'ai réalisé qu'il fallait beaucoup de travail pour entrainer le réseau de neuronne. J'ai commencé à me documenter sur cela, en particulier comment entrainer les réseaux de neuronnes pour la modélisation de phrase. Je n'ai pas pu receuillir le dataset cible car on attend toujours les comités éthiques.
 		
 	</p> 
 
@@ -182,7 +183,8 @@
       		<li> Apprendre à utiliser CUDA et Google Colab (pour lancer les calculs d'entrainment sur des GPUs puissantes de Google) </li>
 		</ul>
 
-		Bilan: Tout a été réalisé.
+		Bilan: <br/>
+		Tout a été réalisé.
 		
 	</p> 
 
@@ -198,12 +200,13 @@
 
 
 		Remarque :<br/>
-		Le but étant de clusterer des tweets en tant que dépressive/non dépressive, j'ai alors codé un classificateur de polarité de phrase. Ce classificateur permettrai donc d'évaluer avec certitude relativement grande la polarité émotionelle d'un tweet . Aprés plusieurs recherches, j'ai décidé d'implémenté le modèle de <i> Kim </i>
-		car un CNN est plus facile à entrainer qu'un RNN, et fournirai une meilleur performance sur des documents de taille petite (<a href="https://towardsdatascience.com/text-classification-rnns-or-cnn-s-98c86a0dd361"> Text Classification — RNN’s or CNN’s?</a>). Après avoir ajuster les hyperparamètres, j'obtiens une accuracy de 80.3%<br/> <br/> 
+		Le but étant de clusterer des tweets en tant que dépressive/non dépressive, j'ai alors codé un classificateur de polarité de phrase. Ce classificateur permettrai donc d'évaluer avec certitude relativement grande la polarité émotionelle d'un tweet. Cette information peut être rajouté aux tweets pour permettre un clustering de meilleur qualité. <br/>
+		J'ai décidé d'implémenté le CNN classificateur de <i> Kim </i>.
+		En effet, un CNN est plus facile à entrainer qu'un RNN, et fournirai une meilleur performance sur des tâches de classification (<a href="https://towardsdatascience.com/text-classification-rnns-or-cnn-s-98c86a0dd361"> Text Classification — RNN’s or CNN’s?</a>). <br/> <br/> 
 
 		Bilan : <br/> 
-		J'ai lu les articles <br/> 
-		J'ai implémenté le CNN classificateur décrit par Kim  <br/> 
+		J'ai lu les articles cité dans l'objectif <br/> 
+		J'ai implémenté le CNN classificateur décrit par Kim. Après avoir ajuster les hyperparamètres, j'obtiens une accuracy de 80.3%  <br/> 
 		J'ai corrigé le bug de la fonction train_model pour le CNN modélisateur : le problème était que j'appliqué un <i> softmax </i> au lieu d'appliquer un <i> sigmoid </i> à la dernière couche. En effet, entrainer ce CNN avec comme code binaire à la "output layer" peut être vue comme un problème de classification multiclasse, mais avec classe multiple, pour une instance donnée !<br/> 
 		
 		
