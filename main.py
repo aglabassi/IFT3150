@@ -10,7 +10,6 @@ in the output layer.
 @author: Abdel
 """
 
-import time
 
 #------------------------------------------------------------------------------
 #If in google colab
@@ -97,12 +96,13 @@ BIN_DIM = 20
 bin_emb_path = 'embeddor/bin_embs_'+str(BIN_DIM)+'d.csv'
 
 if USE_PRETRAIN_BIN_EMBS:  
-    lowdim_sentences_embs = pd.read_csv(PATH+bin_emb_path, sep=',').values
+    bin_embs = pd.read_csv(PATH+bin_emb_path, sep=',').values
 else:
-    t = time.time()
+    import time
     from embeddor import BinaryEmbeddor
-    lowdim_sentences_embs = BinaryEmbeddor(bin_dim=BIN_DIM)(bows.todense())
-    pd.DataFrame(lowdim_sentences_embs).to_csv(PATH+bin_emb_path, index=False)
+    t = time.time()
+    bin_embs = BinaryEmbeddor(bin_dim=BIN_DIM)(bows.todense())
+    pd.DataFrame(bin_embs).to_csv(PATH+bin_emb_path, index=False)
     t = time.time() - t
     print("binary embeddings trained get after ", t, "seconds for n_inputs= ", len(sentences))
 
@@ -114,12 +114,12 @@ else:
 TRAIN_SIZE = 0.8
 DEL = int(len(word_idxs)*TRAIN_SIZE)
 
-X_train, bin_train = word_idxs[:DEL], lowdim_sentences_embs[:DEL]
-X_test, bin_test = word_idxs[DEL:], lowdim_sentences_embs[DEL:]
+X_train, bin_train = word_idxs[:DEL], bin_embs[:DEL]
+X_test, bin_test = word_idxs[DEL:], bin_embs[DEL:]
 
 
 #------------------------------------------------------------------------------
-#Training the CNN to get lowdim sentence modelisation
+#Training the CNN modelisor to get lowdim sentence modelisation
 
 
 import torch
@@ -131,7 +131,6 @@ from modelisor_utils import train_model
 
 def plot(losses, losses_valid):
     import matplotlib.pyplot as plt
-    
     plt.plot(losses, label="train loss")
     plt.plot(losses_valid, label="valid loss")
     plt.xlabel("epoch")
@@ -141,20 +140,25 @@ def plot(losses, losses_valid):
 
 #Hyperparameters
 EPOCHS = 20
-BATCH_SIZE = 16
+BATCH_SIZE = 200
 K_TOP = 3
-LEARNING_RATE = 0.001
+LEARNING_RATE = 0.01
 
 
+#initalise the model
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-cnn_modelisor = CNN(vocab_size=len(vocab), sentence_length=BIG_SENTENCE_LENGTH, \
-                    emb_weights=torch.FloatTensor(model_we.vectors),  k_top=K_TOP)
+cnn_modelisor = CNN(vocab_size=len(vocab), 
+                    sentence_length=BIG_SENTENCE_LENGTH,
+                    emb_weights=torch.FloatTensor(model_we.vectors),  
+                    k_top=K_TOP,
+                    bin_dim=BIN_DIM)
 cnn_modelisor.to(device)
 
 criterion = BCELoss()
 optimizer = optim.Adam(cnn_modelisor.parameters(), lr=LEARNING_RATE)
 
+#training the model
 losses, losses_valid = [],[]
 for epoch in range(EPOCHS):
     loss, loss_valid = train_model(cnn_modelisor, X_train, bin_train, X_test, bin_test, 
