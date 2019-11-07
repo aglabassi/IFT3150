@@ -42,9 +42,6 @@ class CNN(nn.Module):
     def forward(self,x):
         hidden_rep = self.get_hidden_representation(x)
         
-        #reshape to vector format
-        hidden_rep = hidden_rep.view(hidden_rep.shape[0],hidden_rep.shape[1]*hidden_rep.shape[2])
-        
         return torch.sigmoid(self.linear(hidden_rep))
     
     
@@ -69,7 +66,9 @@ class CNN(nn.Module):
         #We get rid of the first dimension : kernel dimension
         pooled2 = F.adaptive_max_pool2d(pooled2.transpose(1,2), (1,pooled2.shape[3])).squeeze()
         
-        return pooled2
+        hidden_rep = pooled2.view(pooled2.shape[0],pooled2.shape[1]*pooled2.shape[2])
+        
+        return hidden_rep
         
         
 
