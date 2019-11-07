@@ -40,10 +40,10 @@ load_src("data_utils", PATH+"data/utils.py" )
 
 import pandas as pd
 
-data = pd.read_csv(PATH+"data/twitter160polarity_mixed.csv", 
-                   encoding="ISO-8859-1") #0 for negative polarity, 1 for positive
+data = pd.read_csv(PATH+"data/twitter160polarity_mixed.csv", encoding="ISO-8859-1") 
 data = data[:500000]
 
+#0 for negative polarity, 1 for positive
 sentences, labels = data["text"].values, data["target"].values
 
 #------------------------------------------------------------------------------
@@ -58,7 +58,7 @@ model_we = gensim.models.KeyedVectors.load_word2vec_format(PATH+word_emb_path)
 vocab = model_we.vocab
 
 #------------------------------------------------------------------------------
-#Feature extraction
+#"Feature extraction"
 #Get sequence representation of inputs
 
 from data_utils import TwitterPreprocessorTokenizer, text_to_sequence
@@ -85,10 +85,6 @@ cnn = CNN_classifier(model_we.vectors, BIG_SENTENCE_LENGTH)
 cnn.fit(X_train, y_train, batch_size=BATCH_SIZE, epochs=EPOCHS, validation_data=(X_valid, y_valid))
 
 cnn.save_weights('polarity_clf.h5')
-
-
-
-
 
 
 
