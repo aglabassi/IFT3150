@@ -38,9 +38,9 @@ def load_src(name, fpath):
 
 load_src("data_utils", PATH+"data/utils.py" )
 load_src("embeddor", PATH+"embeddor/BinaryEmbeddor.py" )
-load_src("modelisor_", PATH+"modelisor/modelisor.py" )
+load_src("modelisor", PATH+"modelisor/modelisor.py" )
 load_src("modelisor_utils", PATH+"modelisor/utils.py" )
-load_src("CNN_classifier", PATH+"polarity/CNN_classifier.py")
+load_src("classifier", PATH+"polarity/classifier.py")
 
 #------------------------------------------------------------------------------
 #Load data
@@ -80,7 +80,7 @@ bows = text_to_bow(sentences, tokenizer)
 #------------------------------------------------------------------------------
 #Get emotional polarities
 
-from CNN_classifier import CNN_classifier
+from classifier import CNN_classifier
 
 polarity_clf = CNN_classifier(model_we.vectors, BIG_SENTENCE_LENGTH)
 polarity_clf.load_weights('polarity/polarity_clf.h5')
@@ -90,7 +90,7 @@ emotional_polarities = polarity_clf.predict(word_idxs) #0:negative. 1:positive
 #------------------------------------------------------------------------------
 #Get the binary low dim sentence representation (embedded sentences)
 
-USE_PRETRAIN_BIN_EMBS = False
+USE_PRETRAIN_BIN_EMBS = True
 BIN_DIM = 20
 
 bin_emb_path = 'embeddor/bin_embs_'+str(BIN_DIM)+'d.csv'
@@ -126,17 +126,9 @@ import torch
 import torch.optim as optim
 from torch.nn import BCELoss
 
-from modelisor_ import CNN
+from modelisor import CNN as CNN_Modelisor
 from modelisor_utils import train_model
 
-def plot(losses, losses_valid):
-    import matplotlib.pyplot as plt
-    plt.plot(losses, label="train loss")
-    plt.plot(losses_valid, label="valid loss")
-    plt.xlabel("epoch")
-    plt.ylabel("loss")
-    plt.show()
-    
 
 #Hyperparameters
 EPOCHS = 20
@@ -148,7 +140,7 @@ LEARNING_RATE = 0.01
 #initalise the model
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-cnn_modelisor = CNN(vocab_size=len(vocab), 
+cnn_modelisor = CNN_Modelisor(vocab_size=len(vocab), 
                     sentence_length=BIG_SENTENCE_LENGTH,
                     emb_weights=torch.FloatTensor(model_we.vectors),  
                     k_top=K_TOP,
@@ -166,13 +158,12 @@ for epoch in range(EPOCHS):
     
     losses.append(loss)
     losses_valid.append(losses)
-    plot(losses, losses_valid)
     
     
 #------------------------------------------------------------------------------
-#Spectral clustering    
-sentences_reduced = cnn_modelisor.get_hidden_representation(torch.tensor(word_idxs, dtype=torch.long)).numpy()
-
+#Spectral clustering  
+inputs = torch.tensor(word_idxs, dtype=torch.long)
+sentences_reduced = cnn_modelisor.get_hidden_representation(inputs).detach().numpy()
 
 from sklearn.cluster import SpectralClustering
 clustering = SpectralClustering(n_clusters=2, 

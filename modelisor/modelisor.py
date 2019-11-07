@@ -16,7 +16,7 @@ import numpy as np
 class CNN(nn.Module):
     
     def __init__(self, vocab_size, sentence_length, emb_weights=None, 
-                 n_kernel1=64, n_kernel2=64, size1=3, size2=4, bin_dim=10, k_top=3):
+                 n_kernel1=64, n_kernel2=64, size1=3, size2=3, bin_dim=20, k_top=5):
         
         super(CNN, self).__init__()          
         
@@ -29,7 +29,7 @@ class CNN(nn.Module):
             ''
          
         #inputs of format (N,1, embedding_dim, sentence_len),
-        #output of format (N,n_kernel,embedding_dim, seentence_len+size-1)
+        #output of format (N,n_kernel,embedding_dim, sentence_len+size-1)
         self.conv1 = nn.Conv2d(1, n_kernel1, (1,size1), padding=(0, size1-1))
         
         self.conv2 = nn.Conv2d(n_kernel1, n_kernel2, (1,size2), padding=(0,size2-1))
@@ -40,15 +40,15 @@ class CNN(nn.Module):
       
     
     def forward(self,x):
-        hidden_rep = self.get_hidden_representation(x)
-        
+        hidden_rep = self.get_hidden_representation(x)        
         return torch.sigmoid(self.linear(hidden_rep))
     
     
     #return a emb/2 * k_top shaped matrix giving a reduced-dimension representation of a sentence (emb*len(s))
     def get_hidden_representation(self,x): 
-        
         #x is of shape (N, sentence_length)
+        import torch
+        import torch.nn.functional as F
         
         embedded = torch.unsqueeze(self.embedding(x), 1)
         embedded = torch.transpose(embedded, 2, 3)

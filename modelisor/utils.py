@@ -46,7 +46,8 @@ def train_model(net, X_train, y_train, X_valid, y_valid, criterion, optimizer, d
         
         #updating statistics
         with torch.no_grad():
-            epoch_losses.append(loss)
+            print(loss.item())
+            epoch_losses.append(loss.item())
     
     net.eval()
     
@@ -56,7 +57,7 @@ def train_model(net, X_train, y_train, X_valid, y_valid, criterion, optimizer, d
             inputs, targets = data
             outputs = net(inputs)
             loss = criterion(outputs, targets)
-            epoch_valid_losses.append(loss)
+            epoch_valid_losses.append(loss.item())
     
                                 
     return np.mean(epoch_losses), np.mean(epoch_valid_losses)
