@@ -111,11 +111,12 @@ else:
 #------------------------------------------------------------------------------
 #Simple train / valid split
     
-TRAIN_SIZE=0.8
+TRAIN_SIZE = 0.8
 DEL = int(len(word_idxs)*TRAIN_SIZE)
 
 X_train, bin_train = word_idxs[:DEL], lowdim_sentences_embs[:DEL]
 X_test, bin_test = word_idxs[DEL:], lowdim_sentences_embs[DEL:]
+
 
 #------------------------------------------------------------------------------
 #Training the CNN to get lowdim sentence modelisation
@@ -154,13 +155,22 @@ for epoch in range(EPOCHS):
     plot(losses, losses_valid)
     
     
-    
-X_train_reduced = cnn_modelisor.get_hidden_representation(torch.tensor(X_train, dtype=torch.long))
+#------------------------------------------------------------------------------
+#Spectral clustering    
+sentences_reduced = cnn_modelisor.get_hidden_representation(torch.tensor(word_idxs, dtype=torch.long)).numpy()
+
+
+from sklearn.cluster import SpectralClustering
+clustering = SpectralClustering(n_clusters=2, 
+                                assign_labels="discretize", random_state=0).fit(sentences_reduced)
+
+labels = clustering.labels_
+
+
 
 
 #------------------------------------------------------------------------------
 #Utils
-
 
 def plot(losses, losses_valid):
     import matplotlib.pyplot as plt
