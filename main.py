@@ -129,6 +129,16 @@ from torch.nn import BCELoss
 from modelisor_ import CNN
 from modelisor_utils import train_model
 
+def plot(losses, losses_valid):
+    import matplotlib.pyplot as plt
+    
+    plt.plot(losses, label="train loss")
+    plt.plot(losses_valid, label="valid loss")
+    plt.xlabel("epoch")
+    plt.ylabel("loss")
+    plt.show()
+    
+
 #Hyperparameters
 EPOCHS = 20
 BATCH_SIZE = 16
@@ -166,18 +176,3 @@ clustering = SpectralClustering(n_clusters=2,
 
 labels = clustering.labels_
 
-
-
-
-#------------------------------------------------------------------------------
-#Utils
-
-def plot(losses, losses_valid):
-    import matplotlib.pyplot as plt
-    
-    plt.plot(losses, label="train loss")
-    plt.plot(losses_valid, label="valid loss")
-    plt.xlabel("epoch")
-    plt.ylabel("loss")
-    plt.show()
-    
