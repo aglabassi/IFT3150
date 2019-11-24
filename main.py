@@ -42,9 +42,10 @@ load_src("modelisor", PATH+"modelisor/modelisor.py" )
 load_src("modelisor_utils", PATH+"modelisor/utils.py" )
 load_src("classifier", PATH+"polarity/classifier.py")
 
+
 #------------------------------------------------------------------------------
 #Load data
-
+import numpy as np
 import pandas as pd
 
 #Waiting for the official data to be approved by ethic comittee.
@@ -155,18 +156,35 @@ losses, losses_valid = [],[]
 for epoch in range(EPOCHS):
     loss, loss_valid = train_model(cnn_modelisor, X_train, bin_train, X_test, bin_test, 
                     criterion, optimizer, device, batch_size=BATCH_SIZE)
-    
+    print(loss)
     losses.append(loss)
     losses_valid.append(losses)
     
     
 #------------------------------------------------------------------------------
-#Spectral clustering  
+#evaluate the hidden representation by batching
+    
+BATCH_SIZE_EVAL = 64
+    
 inputs = torch.tensor(word_idxs, dtype=torch.long)
-sentences_reduced = cnn_modelisor.get_hidden_representation(inputs).detach().numpy()
+sentences_reduced = torch.zeros(0)
 
-from sklearn.cluster import SpectralClustering
-clustering = SpectralClustering(n_clusters=2, 
+for i in range(1 + inputs.shape[0]//BATCH_SIZE_EVAL):
+    print(i)
+    begin = i*BATCH_SIZE_EVAL
+    end = min((i+1)*BATCH_SIZE_EVAL, inputs.shape[0])
+    batch_inputs = inputs[begin:end]
+    batch_sentences_reduced  = cnn_modelisor.get_hidden_representation(batch_inputs)
+    sentences_reduced = torch.cat((sentences_reduced,batch_sentences_reduced), dim=0)
+
+sentences_reduced = sentences_reduced.detach().numpy()
+
+#------------------------------------------------------------------------------
+#Clustering
+
+from sklearn.cluster import KMeans
+n_classes = np.unique(labels).shape[0]
+clustering = KMeans(n_clusters=n_classes, 
                                 assign_labels="discretize", random_state=0).fit(sentences_reduced)
 
 labels = clustering.labels_
