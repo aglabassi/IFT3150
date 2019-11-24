@@ -46,7 +46,6 @@ def train_model(net, X_train, y_train, X_valid, y_valid, criterion, optimizer, d
         
         #updating statistics
         with torch.no_grad():
-            print(loss.item())
             epoch_losses.append(loss.item())
     
     net.eval()
@@ -62,27 +61,3 @@ def train_model(net, X_train, y_train, X_valid, y_valid, criterion, optimizer, d
                                 
     return np.mean(epoch_losses), np.mean(epoch_valid_losses)
 
-
-    
-
-#
-        
-
-## import some data to play with, testing
-#iris = datasets.load_iris()
-#X_train,X_test = iris.data[:100], iris.data[100:]
-#y_train, y_test = iris.target[:100], iris.target[100:]
-#def one_hot(a, num_classes):
-#  return np.squeeze(np.eye(num_classes)[a.reshape(-1)])
-#
-#y_train, y_test = one_hot(y_train, 10), one_hot(y_test, 10)
-#
-#
-#cnn = CNN(100,4)
-#criterion = BCELoss()
-#optimizer = optim.Adam(cnn.parameters(), lr=0.001)
-#            
-#for i in range(100):
-#    a = train_model(cnn, X_train,y_train, X_test, y_test, criterion, optimizer, accuracy_score)
-#    print(a)
-#    

@@ -47,9 +47,6 @@ class CNN(nn.Module):
     #return a emb/2 * k_top shaped matrix giving a reduced-dimension representation of a sentence (emb*len(s))
     def get_hidden_representation(self,x): 
         #x is of shape (N, sentence_length)
-        import torch
-        import torch.nn.functional as F
-        
         embedded = torch.unsqueeze(self.embedding(x), 1)
         embedded = torch.transpose(embedded, 2, 3)
                 
