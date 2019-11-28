@@ -22,8 +22,14 @@ class BinaryEmbeddor():
         self.embedding = SpectralEmbedding(n_components=bin_dim, affinity=similarity_calculator)
         
     def __call__(self,X):
-        unormalized_binary_embs = self.embedding.fit_transform(X)
-        return (np.sign(unormalized_binary_embs)+1)/2    
+        binary_embs = self.embedding.fit_transform(X)
+        medians = np.median(binary_embs, axis=1)
+        for i in range(binary_embs.shape[0]):
+            for j in range(binary_embs.shape[1]):
+                binary_embs[i,j] = 0 if binary_embs[i,j] < medians[i] else 1
+        
+        return binary_embs
+        
         
     def _get_similarity_calculator(n_neighbors, rbf_cst):
         def similarity_calculator(X):

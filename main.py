@@ -78,14 +78,14 @@ tokenizer = TwitterPreprocessorTokenizer(stem=False,remove_stopwords=False)
 word_idxs = text_to_sequence(sentences, tokenizer, vocab, maxlen_absolute=BIG_SENTENCE_LENGTH)
 bows = text_to_bow(sentences, tokenizer)
 
-#------------------------------------------------------------------------------
-#Get emotional polarities
-
-from classifier import CNN_classifier
-
-polarity_clf = CNN_classifier(model_we.vectors, BIG_SENTENCE_LENGTH)
-polarity_clf.load_weights('polarity/polarity_clf.h5')
-emotional_polarities = polarity_clf.predict(word_idxs) #0:negative. 1:positive
+##------------------------------------------------------------------------------
+##Get emotional polarities
+#
+#from classifier import CNN_classifier
+#
+#polarity_clf = CNN_classifier(model_we.vectors, BIG_SENTENCE_LENGTH)
+#polarity_clf.load_weights('polarity/polarity_clf.h5')
+#emotional_polarities = polarity_clf.predict(word_idxs) #0:negative. 1:positive
 
 
 #------------------------------------------------------------------------------
