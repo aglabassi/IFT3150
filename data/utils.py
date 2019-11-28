@@ -21,19 +21,16 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 class TwitterPreprocessorTokenizer():
     
     def __init__(self, stem=True, remove_stopwords=True): 
-      
         self.stopwords =  set(sw.words('english')) if remove_stopwords else set()
         self.stem = SnowballStemmer("english",True).stem if stem else lambda x:x
             
         
     def __call__(self, text):  
-      
         cleaned_text =  TwitterPreprocessorTokenizer._clean(str(text))
         return [ self.stem(word) for word in word_tokenize(cleaned_text) if word not in self.stopwords ]
     
     
     def _clean(document):
-        
         #HTML decoding
         cleaned_document = BeautifulSoup(document,'lxml').get_text()
         
@@ -61,7 +58,6 @@ class TwitterPreprocessorTokenizer():
 
 #Transform texts in sequence of tokens' indexs in vocab
 def text_to_sequence(texts, tokenizer, vocab, maxlen_absolute=None):
-    
     def get_idxs(tkzd_text):
             sequence = []
             for word in tkzd_text:
@@ -88,9 +84,7 @@ def text_to_sequence(texts, tokenizer, vocab, maxlen_absolute=None):
 
 #Given texts, returns it bag-of-words representation, using idf    
 def text_to_bow(texts, tokenizer):
-  
   vectorizer = TfidfVectorizer(tokenizer, strip_accents='unicode', use_idf=True)
-  
   return vectorizer.fit_transform(texts)
   
 
