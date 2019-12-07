@@ -127,7 +127,7 @@ import torch
 import torch.optim as optim
 from torch.nn import BCELoss
 
-from modelisor import CNN as CNN_Modelisor
+from modelisor import Automodelisor
 from modelisor_utils import train_model
 
 
@@ -141,20 +141,21 @@ LEARNING_RATE = 0.01
 #initalise the model
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-cnn_modelisor = CNN_Modelisor(vocab_size=len(vocab), 
+automodelisor = Automodelisor(vocab_size=len(vocab), 
                     sentence_length=BIG_SENTENCE_LENGTH,
                     emb_weights=torch.FloatTensor(model_we.vectors),  
                     k_top=K_TOP,
                     bin_dim=BIN_DIM)
-cnn_modelisor.to(device)
+
+automodelisor.to(device)
 
 criterion = BCELoss()
-optimizer = optim.Adam(cnn_modelisor.parameters(), lr=LEARNING_RATE)
+optimizer = optim.Adam(automodelisor.parameters(), lr=LEARNING_RATE)
 
 #training the model
 losses, losses_valid = [],[]
 for epoch in range(EPOCHS):
-    loss, loss_valid = train_model(cnn_modelisor, X_train, bin_train, X_test, bin_test, 
+    loss, loss_valid = train_model(automodelisor, X_train, bin_train, X_test, bin_test, 
                     criterion, optimizer, device, batch_size=BATCH_SIZE)
     print(loss)
     losses.append(loss)
@@ -162,20 +163,21 @@ for epoch in range(EPOCHS):
     
     
 #------------------------------------------------------------------------------
-#evaluate the hidden representation by batching
+#get the sentence dense representation
     
 BATCH_SIZE_EVAL = 64
     
 inputs = torch.tensor(word_idxs, dtype=torch.long)
 sentences_reduced = torch.zeros(0)
+sentences_reduced = automodelisor.modelisor(inputs)
 
-for i in range(1 + inputs.shape[0]//BATCH_SIZE_EVAL):
-    print(i)
-    begin = i*BATCH_SIZE_EVAL
-    end = min((i+1)*BATCH_SIZE_EVAL, inputs.shape[0])
-    batch_inputs = inputs[begin:end]
-    batch_sentences_reduced  = cnn_modelisor.get_hidden_representation(batch_inputs)
-    sentences_reduced = torch.cat((sentences_reduced,batch_sentences_reduced), dim=0)
+#for i in range(1 + inputs.shape[0]//BATCH_SIZE_EVAL):
+#    print(i)
+#    begin = i*BATCH_SIZE_EVAL
+#    end = min((i+1)*BATCH_SIZE_EVAL, inputs.shape[0])
+#    batch_inputs = inputs[begin:end]
+#    batch_sentences_reduced  = cnn_modelisor.get_hidden_representation(batch_inputs)
+#    sentences_reduced = torch.cat((sentences_reduced,batch_sentences_reduced), dim=0)
 
 sentences_reduced = sentences_reduced.detach().numpy()
 

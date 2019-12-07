@@ -17,7 +17,7 @@ import numpy as np
 
 class BinaryEmbeddor():
   
-    def __init__(self, bin_dim=10, n_neighbors=300, rbf_cst=1):
+    def __init__(self, bin_dim=20, n_neighbors=300, rbf_cst=1):
         similarity_calculator = BinaryEmbeddor._get_similarity_calculator(n_neighbors, rbf_cst)
         self.embedding = SpectralEmbedding(n_components=bin_dim, affinity=similarity_calculator)
         

@@ -12,13 +12,38 @@ import torch.nn as nn
 import torch.nn.functional as F
 import numpy as np
 
-#A convolutional neural network for text modelisation
-class CNN(nn.Module):
+
+#A sort of autoencoder designed to learn a hidden representation, we called this 
+#process modelisation
+class Automodelisor(nn.Module):
     
     def __init__(self, vocab_size, sentence_length, emb_weights=None, 
                  n_kernel1=64, n_kernel2=64, size1=3, size2=3, bin_dim=20, k_top=5):
         
-        super(CNN, self).__init__()          
+        super(Automodelisor, self).__init__()
+        
+        self.modelisor = Modelisor(vocab_size, sentence_length,emb_weights=None, 
+                 n_kernel1=n_kernel1, n_kernel2=n_kernel2, size1=size1, size2=size2, bin_dim=bin_dim, k_top=k_top)          
+        
+        embedding_dim = emb_weights.shape[1] if emb_weights is not None else 50
+        
+        self.unmodelisor = nn.Sequential(nn.Linear(k_top*embedding_dim, bin_dim),
+                                         nn.Sigmoid())
+    
+    def forward(self, x):
+        x = self.modelisor(x)
+        x = self.unmodelisor(x)
+        return x
+        
+        
+
+#A convolutional neural network for text modelisation
+class Modelisor(nn.Module):
+    
+    def __init__(self, vocab_size, sentence_length, emb_weights=None, 
+                 n_kernel1=64, n_kernel2=64, size1=3, size2=3, bin_dim=20, k_top=5):
+        
+        super(Modelisor, self).__init__()          
         
         #If emb weigths are provided, load it, else init a new embeding layer
         embedding_dim = emb_weights.shape[1] if emb_weights is not None else 50
@@ -39,13 +64,13 @@ class CNN(nn.Module):
         self.dynamic_pooler = DynamicKMaxPool(k_top, sentence_length, n_conv=2)
       
     
-    def forward(self,x):
-        hidden_rep = self.get_hidden_representation(x)        
-        return torch.sigmoid(self.linear(hidden_rep))
-    
+#    def forward(self,x):
+#        hidden_rep = self.get_hidden_representation(x)        
+#        return torch.sigmoid(self.linear(hidden_rep))
+#    
     
     #return a emb/2 * k_top shaped matrix giving a reduced-dimension representation of a sentence (emb*len(s))
-    def get_hidden_representation(self,x): 
+    def forward(self,x): 
         #x is of shape (N, sentence_length)
         embedded = torch.unsqueeze(self.embedding(x), 1)
         embedded = torch.transpose(embedded, 2, 3)
@@ -67,8 +92,6 @@ class CNN(nn.Module):
         
         return hidden_rep
         
-        
-
 
 #inspired from https://arxiv.org/pdf/1404.2188.pdf
 class DynamicKMaxPool(nn.Module):
