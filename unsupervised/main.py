@@ -25,7 +25,7 @@ if IN_COLAB:
     PATH = 'gdrive/My Drive/IFT3150/'
 
 else:
-    PATH = ''
+    PATH = '../'
 
 
 
@@ -37,10 +37,9 @@ def load_src(name, fpath):
     return imp.load_source(name, os.path.join(os.path.dirname('__file__'), fpath))
 
 load_src("data_utils", PATH+"data/utils.py" )
-load_src("embeddor", PATH+"embeddor/BinaryEmbeddor.py" )
-load_src("modelisor", PATH+"modelisor/modelisor.py" )
-load_src("modelisor_utils", PATH+"modelisor/utils.py" )
-load_src("classifier", PATH+"polarity/classifier.py")
+load_src("embeddor", PATH+"unsupervised/embeddor/BinaryEmbeddor.py" )
+load_src("modelisor", PATH+"unsupervised/modelisor/modelisor.py" )
+load_src("modelisor_utils", PATH+"unsupervised/modelisor/utils.py" )
 
 
 #------------------------------------------------------------------------------
@@ -78,15 +77,6 @@ tokenizer = TwitterPreprocessorTokenizer(stem=False,remove_stopwords=False)
 word_idxs = text_to_sequence(sentences, tokenizer, vocab, maxlen_absolute=BIG_SENTENCE_LENGTH)
 bows = text_to_bow(sentences, tokenizer)
 
-##------------------------------------------------------------------------------
-##Get emotional polarities
-#
-#from classifier import CNN_classifier
-#
-#polarity_clf = CNN_classifier(model_we.vectors, BIG_SENTENCE_LENGTH)
-#polarity_clf.load_weights('polarity/polarity_clf.h5')
-#emotional_polarities = polarity_clf.predict(word_idxs) #0:negative. 1:positive
-
 
 #------------------------------------------------------------------------------
 #Get the binary low dim sentence representation (embedded sentences)
@@ -94,7 +84,7 @@ bows = text_to_bow(sentences, tokenizer)
 USE_PRETRAIN_BIN_EMBS = True
 BIN_DIM = 20
 
-bin_emb_path = 'embeddor/bin_embs_'+str(BIN_DIM)+'d.csv'
+bin_emb_path = PATH+'unsupervised/embeddor/bin_embs_'+str(BIN_DIM)+'d.csv'
 
 if USE_PRETRAIN_BIN_EMBS:  
     bin_embs = pd.read_csv(PATH+bin_emb_path, sep=',').values
@@ -132,8 +122,8 @@ from modelisor_utils import train_model
 
 
 #Hyperparameters
-EPOCHS = 20
-BATCH_SIZE = 200
+EPOCHS = 10
+BATCH_SIZE = 128
 K_TOP = 3
 LEARNING_RATE = 0.01
 
@@ -164,22 +154,11 @@ for epoch in range(EPOCHS):
     
 #------------------------------------------------------------------------------
 #get the sentence dense representation
-    
-BATCH_SIZE_EVAL = 64
-    
+
 inputs = torch.tensor(word_idxs, dtype=torch.long)
 sentences_reduced = torch.zeros(0)
-sentences_reduced = automodelisor.modelisor(inputs)
+sentences_reduced = automodelisor.modelisor(inputs).detach().numpy()
 
-#for i in range(1 + inputs.shape[0]//BATCH_SIZE_EVAL):
-#    print(i)
-#    begin = i*BATCH_SIZE_EVAL
-#    end = min((i+1)*BATCH_SIZE_EVAL, inputs.shape[0])
-#    batch_inputs = inputs[begin:end]
-#    batch_sentences_reduced  = cnn_modelisor.get_hidden_representation(batch_inputs)
-#    sentences_reduced = torch.cat((sentences_reduced,batch_sentences_reduced), dim=0)
-
-sentences_reduced = sentences_reduced.detach().numpy()
 
 #------------------------------------------------------------------------------
 #Clustering
@@ -189,5 +168,6 @@ n_classes = np.unique(labels).shape[0]
 clustering = KMeans(n_clusters=n_classes, 
                                 assign_labels="discretize", random_state=0).fit(sentences_reduced)
 
-labels = clustering.labels_
+results = clustering.labels_
+np.savetxt(PATH+"unsupervised/results.out", results)
 

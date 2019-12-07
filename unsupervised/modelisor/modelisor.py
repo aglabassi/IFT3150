@@ -22,7 +22,7 @@ class Automodelisor(nn.Module):
         
         super(Automodelisor, self).__init__()
         
-        self.modelisor = Modelisor(vocab_size, sentence_length,emb_weights=None, 
+        self.modelisor = Modelisor(vocab_size, sentence_length,emb_weights=emb_weights, 
                  n_kernel1=n_kernel1, n_kernel2=n_kernel2, size1=size1, size2=size2, bin_dim=bin_dim, k_top=k_top)          
         
         embedding_dim = emb_weights.shape[1] if emb_weights is not None else 50
@@ -72,6 +72,7 @@ class Modelisor(nn.Module):
     #return a emb/2 * k_top shaped matrix giving a reduced-dimension representation of a sentence (emb*len(s))
     def forward(self,x): 
         #x is of shape (N, sentence_length)
+
         embedded = torch.unsqueeze(self.embedding(x), 1)
         embedded = torch.transpose(embedded, 2, 3)
                 
@@ -87,7 +88,7 @@ class Modelisor(nn.Module):
         
         #We get rid of the first dimension : kernel dimension
         pooled2 = F.adaptive_max_pool2d(pooled2.transpose(1,2), (1,pooled2.shape[3])).squeeze()
-        
+    
         hidden_rep = pooled2.view(pooled2.shape[0],pooled2.shape[1]*pooled2.shape[2])
         
         return hidden_rep
