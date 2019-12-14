@@ -10,7 +10,6 @@ from tensorflow.keras.models import Model
 from tensorflow.keras.layers import Input, Embedding,Reshape, Conv2D, MaxPool2D, Concatenate, Flatten, Dropout, Dense
 from tensorflow.keras.initializers import Constant
 
-
  # inspired from "Convolutional Neural Networks for Sentence Classification" 
  #(Yoon Kim), https://arxiv.org/pdf/1408.5882.pdf
 class CNN_classifier():

@@ -87,13 +87,13 @@ BIN_DIM = 20
 bin_emb_path = PATH+'unsupervised/embeddor/bin_embs_'+str(BIN_DIM)+'d.csv'
 
 if USE_PRETRAIN_BIN_EMBS:  
-    bin_embs = pd.read_csv(PATH+bin_emb_path, sep=',').values
+    bin_embs = pd.read_csv(bin_emb_path, sep=',').values
 else:
     import time
     from embeddor import BinaryEmbeddor
     t = time.time()
     bin_embs = BinaryEmbeddor(bin_dim=BIN_DIM)(bows.todense())
-    pd.DataFrame(bin_embs).to_csv(PATH+bin_emb_path, index=False)
+    pd.DataFrame(bin_embs).to_csv(bin_emb_path, index=False)
     t = time.time() - t
     print("binary embeddings trained get after ", t, "seconds for n_inputs= ", len(sentences))
 
