@@ -1,21 +1,281 @@
-
 <!DOCTYPE html>
-<!--Copyright (c) 2016 Payam Siyari-->
+
+
 <html>
-<title>Home</title>
+
 <head>
-	<meta http-equiv="refresh" content="30">
-	<style>
-		html {
-			background: url(https://source.unsplash.com/featured/?nature) no-repeat center center fixed; 
-			-webkit-background-size: cover;
-			-moz-background-size: cover;
-			-o-background-size: cover;
-			background-size: cover;
-		}
-	</style>
+  <title>IFT3150 - Abdel Ghani Labassi </title>
 </head>
-<body></body>
+<body>
+
+
+  <h1>IFT3150 - Projet en traitement automatique du langage naturel</h1>
+  <br/>
+  <br/>
+
+  <h2> Détection de dépression sur Twitter en utilisant l'apprentissage machine  </h2>
+  <h2>Par Abdel Ghani Labassi </h2>
+  <h2>Supervisé par <a href="http://rali.iro.umontreal.ca/nie/jian-yun-nie/"> Prof. Jian-Yun Nie </a></h2>
+
+
+	<br/>
+	<br/>
+  
+
+
+  <h2>Code</h2>
+  	<p>
+  		<a href="https://github.com/aglabassi/IFT3150"> GitHub Repo </a>
+  	</p>
+  	
+
+  <h2>Sommaire</h2>
+
+  <ul>
+    <li><a href="#Enonce">Énoncé du projet</a></li>
+    <li><a href="#Description">Description détaillée</a></li>
+    <li><a href="#Plan">Plan de développement</a></li>
+    <li><a href="#Rapports">Rapports d'avancement</a></li>
+	<li><a href="#RapportFinal"> Résumé du rapport final</a></li>
+  </ul>
+
+
+  <div id="Enonce">
+      <h2>Énoncé du projet</h2>
+	  <p> 
+	  	La dépression et le suicide sont devenus des problèmes de plus en plus préoccupants dans notre société. Une détection à temps de ces problèmes peut aider à sauver des vies. Le travail de ce projet consiste à explorer la possibilité de détecter des signaux de dépression et de suicide sur les réseaux sociaux où beaucoup d'internautes échangent des informations et leurs pensées. Des personnes ayants la dépression ou des idées suicidaires peuvent les exprimer sur les réseaux sociaux. Notre travail est une étude de faisabilité dans l'automatisation de cette détection. Le projet est subventionnée par L'Agence de la santé publique du Canada via une subvention à l'entreprise Sightline avec qui des chercheurs de McGill et de l'UdeM collaborent.
+	  </p> 
+
+	<p> 
+  		La tâche de détection peut être vue comme une tâche de classification: est-ce qu'un post sur Twitter (un tweet) montre des signaux de dépression ou de suicide? Pour cela, nous allons explorer différents types d'informations: les mots dans le post, le sentiment que ces mots expriment, les caractéristiques de l'utilisateur (e.g. fréquence d'utilisation de Twitter), le cercle d'amis sur Twitter, etc. Ces informations seront extraites à partir des données de Twitter en utilisant l'extraction de l'information et des outils de traitement de langue naturelle. Parmi les techniques de classification envisagées, nous allons tester des techniques de classification classiques comme Naive Bayes, l'arbre de décision, mais aussi les techniques d'apprentissage profond (e.g. représenter des mots par des embeddings). Ces techniques, supervisés, devront être investigués seulement l'annotation des données complétés par des chercheurs de McGill. En attente de cela, je vais explorer la fesabilité d'une telle détection en utilisant les techniques non-supervisées, en ajoutant comme information supplémentaire la polarité émotionnelle, information accessible via un classificateur entrainé sur le jeu de donnée <a href="https://www.kaggle.com/kazanova/sentiment140"> Sentiment140</a> .
+    </p>
+  </div>
+
+
+  <div id="Description">
+    <h2>Description détaillée</h2>
+	<p>
+		J'utiliserai la librairie Scikit-learn pour les techniques d'apprentissages classiques, PyTorch pour l'implémentation de réseaux de neuronnes "non-standards", et Keras pour l'implémentation de réseaux de neuronnes "standards". Pour les contraintes matériels, j'aurai accès à des GPU puissantes lorsqu'il s'agira d'entraîner les modèles, via Google Colab. Pour la phase de developpement logiciel, une machine ample suffit, et je developperai dans l'IDE Spyder. <br/><br/>
+
+		J'envisage me familiariser avec les techniques non-supervisées, et en particulier, implémenter le modèle proposé dans l'article <a href="https://www.aclweb.org/anthology/W15-1509.pdf"> Short Text Clustering via Convolutional Neural Networks (Xu) </a> (CNN modélisateur) à l'aide de PyTorch et Scikit Learn. <br/><br/>
+
+		Pour obtenir un classificateur entrainé pour analyser la polarité émotionnelle, j'ai décidé d'implémenter le CNN décrit dans l'article <a href="https://arxiv.org/pdf/1408.5882.pdf"> Convolutional Neural Networks for Sentence Classification (Kim) </a> (CNN classificateur) , que j'entrainerai avec le jeu de donné <a href="https://www.kaggle.com/kazanova/sentiment140"> Sentiment140</a>, contenant 1.6 millions de tweets annotées.
+
+  </div>
+
+
+
+  <div id="Plan">
+
+    <h2>Plan de développement</h2>
+	
+	<p> Date de début: 10 septembre <br/> 
+		Date de fin : 1er décembre <br />
+		Date de présentation : à confirmer
+
+	</p>
+
+	
+	<p>Plan pour le mois de septembre (avant l'annotation des données) : </p>
+	
+	<ul>
+      <li>Se familiariser avec les techniques d'apprentissages non-supervisées </li>
+      <li>Implémenter le modèle de Xu </li>
+	</ul>
+	
+	<p>À planifier : </p>
+	<ul>
+	  <li>Ajouter comme information supplémentaire la polarité émotionnelle </li>
+	   <li>Prendre connaissance du jeu de donnée (on attend l'autorisation des comités éthiques) </li>
+
+	</ul>
+  </div>
+
+
+  <div id="Rapports">
+    <h2>Rapports d'avancement</h2>
+
+	<h3>Semaine 2 : 9 au 16 septembre</h3>
+
+	<p> 
+		Objectif :
+
+		<ul>
+      		<li> Mise en place du site web </li>
+      		<li> Lecture approfondie de l'article <a href="https://www.aclweb.org/anthology/W15-1509.pdf"> Short Text Clustering via Convolutional Neural Networks </a> </li>
+      		<li> Se familiariser avec le partionnement en k-moyennes (k-means clustering) </li>
+		</ul>
+
+	    Bilan : <br/> 
+	    les objectifs ont tous étés réalisés. Un résumé du modèle sera décrite dans le rapport finale, de même que sur la méthode des k-means.
+
+	</p> 
+
+
+	<h3>Semaine 2 : 16 au 23 septembre</h3>
+
+	<p> 
+		Objectif :
+		<ul>
+      		<li> Commencer l'implémentation </li>
+      		<li> Acquérire les embeddings </li>
+      		<li> Coder des fonctions auxilliaire de traitement de l'inputs </li>
+      		<li> Coder le CNN modélisateur  </li>
+      		<li> Coder l'embeddeur binaire  </li>
+		</ul>
+
+		Bilan: <br/> 
+		J'ai décidé de commencé par l'implémentation de l'embeddeur binaire, car il est nécessaire au fonctionnement du réseaux de neuronnes. J'ai été contraint à me documenter sur la méthode du "Laplacian Eighenmap" (que je résumerai dans le rappport final) pour résoudre le problème d'optimisation permettant d'avoir le code binaire. Je me suis documenté sur son implementation sur sklearn, portant le nom de "spectral embedding". La bibliothèque propose des choix de matrices de similarités différentes que celle proposé dans l'article. J'ai donc été contraint d'implémenter le calculateur de matrices de similarités manuellement. Ensuite, j'ai testé l'embeddeur binaire sur le dataset "The Digit Dataset", et les résultats furent prometteur : en utilisant le code binaire avec dimension q=10, soit 6 fois moins de features que les features original (8x8=64), l'accuracy fut de 86% (réduit) vs 88% (original) avec Naive Bayes. Je n'ai pas eu le temps de commencer l'implémentation du CNN modélisateur.
+
+	</p> 
+
+	<h3>Semaine 3 : 23 au 30 septembre</h3>
+
+	<p> 
+		Objectif :
+		<ul>
+      		<li> Finir l'implémentation du CNN modéliseur </li>
+      		<li> Finir le "main.py" (i.e mettre toute les parties ensemble) </li>
+		</ul>
+
+		Bilan: <br/>  
+		J'ai fini l'implémentation du CNN modélisateur. J'ai toutefois sous-estimé le temps que cela me prendrait : l'article décrivait de manière très "haut niveau" le fonctionnement du CNN. J'ai donc du me documenter plus en profondeur sur l'architecture du modèle proposé, et j'ai donc lu l'article <a href="https://www.aclweb.org/anthology/P14-1062.pdf"> A Convolutional Neural Network for Modelling Sentences (Kalchbrenner) </a>  qui décrivait la même architecture que celle proposé dans <i>Xu </i>. Cela m'a permis d'appronfondir mes connaissances sur les architectures des réseaux de neuronnes utilisé pour modeliser des phrases (et non pas pour les classifier). En particulier, j'ai implémenté le "Dynamic k-Max Pooling" tel que expliqué dans <i> Kalchbrenner </i>  à l'aide de Pytorch.
+	
+	</p> 
+
+	<h3>Semaine 4 : 1 au 7 octobre </h3>
+
+	<p> 
+		Objectif : <br/>
+		<ul>
+      		<li> Tester tous le système sur le dataset <a href="https://competitions.codalab.org/competitions/20011"> OffensEval 2019</a> et debugger   </li>
+      		<li> Receuillir le dataset cible (depression et suicide sur Twitter) </li>
+		</ul>
+
+		Bilan: <br/>
+		J'ai réalisé qu'il fallait beaucoup de travail pour entrainer le réseau de neuronne. J'ai commencé à me documenter sur cela, en particulier comment entrainer les réseaux de neuronnes pour la modélisation de phrase. Je n'ai pas pu receuillir le dataset cible car on attend toujours les comités éthiques.
+		
+	</p> 
+
+	<h3>Semaine 5 : 7 au 14 octobre </h3>
+
+	<p> 
+		Note: je planifie mettre moins de temps cette semaine pour le projet, en raison de la mi-session.<br/>
+		Objectif :
+		<ul>
+			<li> Se documenter sur l'entrainement de réseaux neuronnaux pour la modélisation de phrase </li>
+      		<li> Coder la fonction train_model et la tester </li>
+		</ul>
+
+		Bilan: <br/> 
+		J'ai codé la fonction train_model, toutefois, l'apprentissage ne se fait pas comme prévue : 
+		le loss ne diminue pas. Je vais régler ce problème après la semaine de relache.
+		
+	</p> 
+
+	<h3>Semaine 5 : 14 au 21 octobre </h3>
+
+	<p> 
+		Note: je planifie mettre moins de temps cette semaine pour le projet, en raison de la mi-session.<br/>
+		Objectif :
+		<ul>
+			<li> Se documenter sur l'entrainement de réseaux neuronnaux via GPU</li>
+      		<li> Apprendre à utiliser CUDA et Google Colab (pour lancer les calculs d'entrainment sur des GPUs puissantes de Google) </li>
+		</ul>
+
+		Bilan: <br/>
+		Tout a été réalisé.
+		
+	</p> 
+
+	<h3>Semaine 5 : 21 au 30 octobre </h3>
+
+	<p> 
+		Objectif :
+		<ul>
+			<li> Se documenter sur les meilleurs classificateur de textes (supervisés)</li>
+			<li> Lecture de l'article <a href="https://arxiv.org/pdf/1702.01923.pdf"> Comparative Study of CNN and RNN for Natural Language Processing </a>   
+      		<li> Lecture appronfondie de l'article  <a href="https://arxiv.org/pdf/1408.5882.pdf"> Convolutional Neural Networks for Sentence Classification (Kim) </a>  </li>
+		</ul>
+
+
+		Remarque :<br/>
+		Le but étant de clusterer des tweets en tant que dépressive/non dépressive, j'ai alors codé un classificateur de polarité de phrase. Ce classificateur permettrai donc d'évaluer avec certitude relativement grande la polarité émotionelle d'un tweet. Cette information peut être rajouté aux tweets pour permettre un clustering de meilleur qualité. <br/>
+		J'ai décidé d'implémenté le CNN classificateur de <i> Kim </i>.
+		En effet, un CNN est plus facile à entrainer qu'un RNN, et fournirai une meilleur performance sur des tâches de classification (<a href="https://towardsdatascience.com/text-classification-rnns-or-cnn-s-98c86a0dd361"> Text Classification — RNN’s or CNN’s?</a>). <br/> <br/> 
+
+		Bilan : <br/> 
+		J'ai lu les articles cité dans l'objectif <br/> 
+		J'ai implémenté le CNN classificateur décrit par Kim. Après avoir ajuster les hyperparamètres, j'obtiens une accuracy de 80.3%  <br/> 
+		J'ai corrigé le bug de la fonction train_model pour le CNN modélisateur : le problème était que j'appliqué un <i> softmax </i> au lieu d'appliquer un <i> sigmoid </i> à la dernière couche. En effet, entrainer ce CNN avec comme code binaire à la "output layer" peut être vue comme un problème de classification multiclasse, mais avec classe multiple, pour une instance donnée !<br/> 
+		
+		
+	</p>
+
+	<h3>Semaine 5 : 1 au 7 novembre </h3>
+	<p> 
+
+		Cette semaine, j'ai rencontré le chercheur PhD. Pan Du, du RALI, qui travail sur le projet. Il m'a demander de lire un segment d'article non publié sur la selection d'attributs spécifiquement dans le contexte de l'analyse de sentiment. Il m'a aussi demander de finir le clusterer du modèle de Xu. Les résultats de clustering pourront être incorporés comme attributs une fois les données annotées. On a aussi discuté des idées sur comment utilisé le classificateur de polarité émotionnelle, et d'aprés lui, le mieux serait de "fine-tuner" le classifier une fois les données annotés. 
+		<br/> <br/> 
+		
+
+		Bilan : <br/> 
+		J'ai implémenter l'algorithme de clustering. J'ai choisi le Spectral Clustering. Le modèle de Xu est donc prêt à être testé.   <br/> 
+		J'ai été mis en contact avec la compagnie SightLine. J'ai maintenant accès aux données brutes non-annotées via leur serveur.
+		
+		
+	</p> 
+
+
+	<h3>Semaine 5 : 7 novembre À FIN DE LA SESSION</h3>
+	<p> 
+		Ayant consacré beaucoup trop de temps sur le projet au détriment de mes autres cours, je vais plus me concentrer sur mes autres cours et ce jusqu'à la fin de la session. Je crains aussi ne pas avoir le temps de tester mon modèle. Cela ne fait rien, ma contribution est en open-source sur GitHub. J'ai une rencontre avec le chercheur PhD.Pan Du pour m'aider à m'orienter dans la rédaction de mon rapport. J'ai également un séminaire le 21 novembre sur la détection de dépression sur les résaux sociaux.
+		
+		
+	</p> 
+
+	<h3>Semaine 6 : 14 novembre À 21 novembre</h3>
+	<p> 
+		J'ai correspondu avec SightLine pour obtenir les données. J'attend leur réponse.
+		
+	</p> 
+	<h3>Semaine 7 : 21 novembre À 28 novembre</h3>
+	<p> 
+		Sightline veut garder les données sur leurs serveurs. Je dois donc uploader mon repo pour pouvoir lancer le test. J'ai envoyé mon repo à Sightline, et j'attend qui le mettent sur le serveur.
+		
+	</p> 
+	<h3>Semaine 8 : 1 décembre au 7 décembre </h3>
+	<p> 
+		Mon repo a été mis sur le serveur le 5 décembre. Toutefois, je ne peux encore tester le tout car les données ne sont pas encore prêtes. J'ai commencé le rapport, et j'ai commencé le rapport en laissant les résultats expérimentaux à blanc. Je remplirai ceux-ci vers Janvier, comme Prof. Nie me l'a recommandé.
+		
+	</p> 
+
+
+
+  </div>
+
+
+
+
+
+  <div id="RapportFinal">
+  	<h2>Résumé du rapport final</h2>
+  	
+  	On propose deux approches d'apprentissage machine pour la détection de depression sur Twitter : une approche non-supervisée et une approche supervisée.  <br/> 
+
+  	L'approche non-supervisée présente un avantage majeure : il n'est point nécessaire de passer par la phase d'annotation, ce qui représente des économies en temps et en ressource humaine. Par contre, les techniques non-supervisées actuelle n'offre pas une grande accuracy lors de tâches de classification. Cela ne nous dérange pas trop car le but est une étude sur la faisabilité. De plus, les résultats obtenus ici pourront être utilisé pour un apprentissage supervisée. L'approche supervisée, si l'accuracy est à prioriser, semble la plus pertinente, comme le montre les récents travaux en classification de texte.  <br/> 
+
+	Ce rapport sera divisé en 2 chapitres principaux : l'un décrivant une approche non-supervisé et l'autre une approche supervisé. On donnera un résumé de la théorie ainsi qu'un compte rendu technique de l'implémentation de leur modèles respectifs.
+
+
+	<br/> 
+	<br/> 
+  	Le rapport final est disponible à cette
+  	<a href="https://drive.google.com/open?id=1iWMlqGbluyQ4SZ0tdgauN0x-B4OJTM3V"> adresse </a>
+
+  
+  </div>
+  
+</body>
+
 </html>
-
-
